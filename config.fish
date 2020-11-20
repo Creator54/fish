@@ -1,6 +1,6 @@
 function fish_greeting
 	clear
-	~/.config/fish/ufetch
+	fortune -a ascii-art && fortune -a science
 end
 
 alias view_pic "kitty +kitten icat" #for viewing images in kitty
