@@ -1,0 +1,1 @@
+/home/creator54/.local/share/omf/themes/will/fish_prompt.fish
