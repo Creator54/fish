@@ -48,6 +48,7 @@ alias ufetch ".//.config/fish/scripts/ufetch"
 alias lectures "cd /run/mount/data/Lectures"
 alias ytdl "youtube-dl"
 alias sys "cd /etc/nixos"
+alias get "wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N"
 alias view_pic "kitty +kitten icat" #for viewing images in kitty
 
 #for stuff inside this dir
