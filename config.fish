@@ -10,6 +10,22 @@ function i
   end
 end
 
+function x
+  if [ -d $argv ]
+    rm -rf $argv
+  else
+    rm $argv
+  end
+end
+
+function get 
+  if echo $argv | grep .git &> /dev/null
+    git clone $argv;
+  else
+    wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N $argv
+  end
+end
+
 function bind_bang
     switch (commandline -t)[-1]
         case "!"
@@ -45,10 +61,11 @@ alias q "nix-env -q"
 alias n "nvidia-offload"
 alias calc "eva"
 alias ufetch ".//.config/fish/scripts/ufetch"
-alias lectures "cd /run/mount/data/Lectures"
+alias lectures "cd /run/mount/data1/Lectures/Study"
 alias ytdl "youtube-dl"
 alias sys "cd /etc/nixos"
-alias get "wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N"
+alias copy "rsync --info=progress2 -auvz"
+alias fget "wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N"
 alias view_pic "kitty +kitten icat" #for viewing images in kitty
 
 #for stuff inside this dir
