@@ -22,7 +22,7 @@ function get
   if echo $argv | grep .git &> /dev/null
     git clone $argv;
   else
-    wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N $argv
+    wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N "$argv"
   end
 end
 
