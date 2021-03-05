@@ -45,6 +45,18 @@ function bind_dollar
     end
 end
 
+#docker containers
+
+function kali
+  sudo docker start cool_wozniak
+  sudo docker exec -it cool_wozniak bash
+end
+
+function ubuntu
+  sudo docker start infallible_beaver
+  sudo docker exec -it infallible_beaver bash
+end 
+
 function fish_user_key_bindings
     bind ! bind_bang
     bind '$' bind_dollar
