@@ -57,6 +57,11 @@ function ubuntu
   sudo docker exec -it infallible_beaver bash
 end 
 
+function archlinux  #cant use archlinux:latest bcoz of alpm/ glibc issue use logankoester/archlinux
+  sudo docker start inspiring_shamir
+  sudo docker exec -it inspiring_shamir bash
+end
+
 function fish_user_key_bindings
     bind ! bind_bang
     bind '$' bind_dollar
@@ -67,15 +72,22 @@ end
 alias d "cd ~/dev"
 alias v "$EDITOR"
 alias c "cd .."
-alias s "nix search"
-alias r "nix-env --uninstall"
-alias q "nix-env -q"
-alias n "nvidia-offload"
+if uname -a | grep NixOS &> /dev/null
+  alias s "nix search"
+  alias r "nix-env --uninstall"
+  alias q "nix-env -q"
+  alias n "nvidia-offload"
+else if man yay
+  alias s "yay -Ss"
+  alias i "yay -Sy"
+  alias r "yay -R"
+end
 alias calc "eva"
 alias ufetch ".//.config/fish/scripts/ufetch"
 alias lectures "cd /run/mount/data1/Lectures/Study"
 alias ytdl "youtube-dl"
 alias sys "cd /etc/nixos"
+alias poweshell "pash"
 alias copy "rsync --info=progress2 -auvz"
 alias fget "wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N"
 alias view_pic "kitty +kitten icat" #for viewing images in kitty
