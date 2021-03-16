@@ -83,6 +83,7 @@ else if man yay
   alias r "yay -R"
 end
 alias calc "eva"
+alias clipboard "copyq clipboard"
 alias ufetch ".//.config/fish/scripts/ufetch"
 alias lectures "cd /run/mount/data1/Lectures/Study"
 alias ytdl "youtube-dl"
