@@ -70,8 +70,9 @@ end
 # https://superuser.com/questions/719531/what-is-the-equivalent-of-bashs-and-in-the-fish-shell
 
 alias d "cd ~/dev"
-alias v "$EDITOR"
+alias e "$EDITOR"
 alias c "cd .."
+alias v "less"
 if uname -a | grep NixOS &> /dev/null
   alias s "nix search"
   alias r "nix-env --uninstall"
