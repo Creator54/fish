@@ -97,7 +97,11 @@ alias view_pic "kitty +kitten icat" #for viewing images in kitty
 #for stuff inside this dir
 set dir '~/.config/fish/scripts'
 
-for i in extract_frame ralias reduce rpattern yt ytpart 
-  alias $i "$dir/$i | bash"
+for i in extract_frame ralias reduce rpattern yt ytpart
+  if [ $i = "yt" ]
+    alias $i "$dir/$i" | sh
+  else
+    alias $i "$dir/$i | bash"
+  end
 end
 
