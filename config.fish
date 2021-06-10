@@ -18,6 +18,19 @@ function x
   end
 end
 
+#broken
+function cdd
+  if test -d $argv
+    cd $argv;
+  else
+    read -p "$argv" "doesn't exist create " ans
+		if [ "$ans" = "" ]
+      mkdir $argv;
+      cd $argv;
+    end
+  end
+end
+
 function get 
   if echo $argv | grep .git &> /dev/null
     git clone $argv;
