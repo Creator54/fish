@@ -1,3 +1,5 @@
+set -gx EDITOR vim
+
 function fish_greeting
   fortune -a ascii-art && fortune -a science
 end
@@ -18,6 +20,11 @@ function x
   end
 end
 
+function update
+  nix-channel --update nixpkgs
+  nix-env -u '*'
+end
+
 function get 
   if echo $argv | grep .git &> /dev/null
     git clone $argv;
@@ -33,6 +40,19 @@ function bind_bang
         case "*"
             commandline -i !
     end
+end
+
+#broken
+function cdd
+  if test -d $argv
+    cd $argv;
+  else
+    read -p "$argv" "doesn't exist create " ans
+		if [ "$ans" = "" ]
+      mkdir $argv;
+      cd $argv;
+    end
+  end
 end
 
 function bind_dollar
@@ -83,6 +103,8 @@ else if man yay
   alias i "yay -Sy"
   alias r "yay -R"
 end
+alias ftp "ncftp"
+alias gallery "gthumb"
 alias calc "eva"
 alias clipboard "copyq clipboard"
 alias ufetch ".//.config/fish/scripts/ufetch"
@@ -106,3 +128,8 @@ for i in extract_frame ralias reduce rpattern yt ytpart
   end
 end
 
+alias minexmr "xmrig -o pool.minexmr.com:4444 -k --coin monero -a rx/0 --randomx-mode=fast -u 47yKDNQ3bcggyHwp2GrTCV9QdMEP8VzqQak1h9fyvhhRCzfQXdkdonrdUVA4h2SP1QLQX68qmVKKjjDYweng1TAL1gKGS2m"
+alias hashvault "xmrig -o pool.hashvault.pro:80 -k --coin monero -a rx/0 --randomx-mode=fast -u 47yKDNQ3bcggyHwp2GrTCV9QdMEP8VzqQak1h9fyvhhRCzfQXdkdonrdUVA4h2SP1QLQX68qmVKKjjDYweng1TAL1gKGS2m"
+
+#doge
+alias doge "xmrig -o rx.unmineable.com:3333 -a rx -k -u DOGE:DHzDUHACdrc5j6SM6bSsaWsvrPimFKg8Er.DOGEE#vejs-jzsz"
