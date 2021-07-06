@@ -92,7 +92,7 @@ end
 alias d "cd ~/dev"
 alias e "$EDITOR"
 alias c "cd .."
-alias v "less"
+alias v "bat"
 if uname -a | grep NixOS &> /dev/null
   alias s "nix search"
   alias r "nix-env --uninstall"
@@ -103,6 +103,7 @@ else if man yay
   alias i "yay -Sy"
   alias r "yay -R"
 end
+alias usage "baobab"
 alias ftp "ncftp"
 alias gallery "gthumb"
 alias calc "eva"
