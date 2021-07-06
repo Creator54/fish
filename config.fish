@@ -1,4 +1,5 @@
 set -gx EDITOR vim
+set -gx PAGER bat
 
 function fish_greeting
   fortune -a ascii-art && fortune -a science
