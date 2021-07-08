@@ -6,10 +6,8 @@ function fish_greeting
 end
 
 function i
-  if echo $argv | grep nixpkgs. &> /dev/null
-    nix-env -iA nixpkgs.$argv
-  else
-    nix-env -iA nixos.$argv
+  if ! nix-env -iA nixos.$argv
+    nix-env -iA nixpks.$argv;
   end
 end
 
