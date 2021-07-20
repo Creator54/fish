@@ -1,13 +1,13 @@
 set -gx EDITOR vim
-set -gx PAGER bat
+set -gx PAGER "nvim +Man!"
+set -gx MANPAGER "nvim +Man!"
 
 function fish_greeting
-  fortune -a ascii-art && fortune -a science
 end
 
 function i
   if ! nix-env -iA nixos.$argv
-    nix-env -iA nixpks.$argv;
+    nix-env -iA nixpkgs.$argv;
   end
 end
 
@@ -92,6 +92,7 @@ alias d "cd ~/dev"
 alias e "$EDITOR"
 alias c "cd .."
 alias v "bat"
+
 if uname -a | grep NixOS &> /dev/null
   alias s "nix search"
   alias r "nix-env --uninstall"
