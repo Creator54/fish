@@ -64,23 +64,6 @@ function bind_dollar
     end
 end
 
-#docker containers
-
-function kali
-  sudo docker start cool_wozniak
-  sudo docker exec -it cool_wozniak bash
-end
-
-function ubuntu
-  sudo docker start infallible_beaver
-  sudo docker exec -it infallible_beaver bash
-end 
-
-function archlinux  #cant use archlinux:latest bcoz of alpm/ glibc issue use logankoester/archlinux
-  sudo docker start inspiring_shamir
-  sudo docker exec -it inspiring_shamir bash
-end
-
 function fish_user_key_bindings
     bind ! bind_bang
     bind '$' bind_dollar
@@ -89,9 +72,9 @@ end
 # https://superuser.com/questions/719531/what-is-the-equivalent-of-bashs-and-in-the-fish-shell
 
 alias d "cd ~/dev"
-alias e "$EDITOR"
+alias e $EDITOR
 alias c "cd .."
-alias v "bat"
+alias v $PAGER
 
 if uname -a | grep NixOS &> /dev/null
   alias s "nix search"
