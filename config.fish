@@ -1,6 +1,11 @@
+set -gx TERM kitty
+set -gx TERMINAL kitty
 set -gx EDITOR vim
+set -gx VISUAL vim
 set -gx PAGER "nvim +Man!"
-set -gx MANPAGER "nvim +Man!"
+set -gx MANPAGER "less" 
+set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
+set -gx NNN_FIFO '/tmp/nnn.fifo'
 
 function fish_greeting
 end
