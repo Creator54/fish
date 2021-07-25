@@ -4,7 +4,7 @@ set -gx EDITOR vim
 set -gx VISUAL vim
 set -gx BROWSER brave
 set -gx WALLPAPERS '/home/creator54/wallpapers'
-set -gx CPLUS_INCLUDE_PATH s6scq5f4vk7pmxbch63byqw0zhf988j8-libc++-11.1.0/include/c++/v1
+set -gx CPLUS_INCLUDE_PATH /nix/store/s6scq5f4vk7pmxbch63byqw0zhf988j8-libc++-11.1.0/include/c++/v1
 set -gx PAGER "nvim +Man!"
 set -gx MANPAGER "less" 
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
