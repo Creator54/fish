@@ -11,6 +11,12 @@ set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 
 function fish_greeting
+	pgrep startx &> /dev/null
+	if test "$status" = "1"; and who -q | grep -e "users=1" &>/dev/null
+		clear;echo "Starting your Xserver";
+		startx &> /dev/null
+		clear;echo "Xserver killed successfully!"
+	end
 end
 
 function i
