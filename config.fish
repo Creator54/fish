@@ -109,6 +109,7 @@ else if man yay
   alias r "yay -R"
 end
 
+alias keys "screenkey --no-systray -t 0.4"
 alias man batman
 alias usage "baobab"
 alias ftp "ncftp"
