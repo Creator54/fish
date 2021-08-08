@@ -10,6 +10,14 @@ set -gx MANPAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 
+
+# check if vimp-pad dir exists if not create
+if which nvim &> /dev/null
+	if [ ! -d ~/.local/share/nvim/vim-pad ]
+		mkdir ~/.local/share/nvim/vim-pad 
+	end
+end
+
 function fish_greeting
 	pgrep startx &> /dev/null
 	if test "$status" = "1"; and who -q | grep -e "users=1" &>/dev/null
