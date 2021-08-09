@@ -10,6 +10,15 @@ set -gx MANPAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 
+#Verbose mv
+function mvv
+	mv $argv | progress -m
+end
+
+#Verbose cp
+function cpv
+	cp -r $argv | progress -m
+end
 
 # check if vimp-pad dir exists if not create
 if which nvim &> /dev/null
