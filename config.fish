@@ -10,6 +10,37 @@ set -gx MANPAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 
+function phone
+	ftp ftp://192.168.43.1:2221
+end
+
+function cmd
+	echo Running $argv && $argv
+end
+
+function he
+	cmd home-manager edit
+end
+
+function hs
+	cmd home-manager switch
+end
+
+#fetch battery left
+function BATT
+	upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep percentage | grep -Po "\\d+"
+end
+
+#python development
+function pydev
+	nix-shell -p '(callPackage (fetchTarball https://github.com/DavHau/mach-nix/tarball/3.3.0) {}).mach-nix' --run 'mach-nix env ./env -r requirements.txt && nix-shell ./env'
+end
+
+#for yt music
+function play
+	yt -m $argv
+end
+
 #Verbose mv
 function mvv
 	mv $argv | progress -m
@@ -118,6 +149,9 @@ else if man yay
   alias r "yay -R"
 end
 
+alias clip "xclip -sel clip"
+alias stream "cvlc --fullscreen --aspect-ratio 16:9 --loop"
+alias size "gdu"
 alias keys "screenkey --no-systray -t 0.4"
 alias man batman
 alias usage "baobab"
