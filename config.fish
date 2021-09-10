@@ -149,6 +149,7 @@ else if man yay
   alias r "yay -R"
 end
 
+alias usb 'cd /run/media/creator54/'
 alias clip "xclip -sel clip"
 alias stream "cvlc --fullscreen --aspect-ratio 16:9 --loop"
 alias size "gdu"
