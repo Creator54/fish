@@ -15,7 +15,8 @@ function phone
 end
 
 function cmd
-	echo Running $argv && $argv
+	echo CMD: $argv; echo
+	$argv
 end
 
 function he
