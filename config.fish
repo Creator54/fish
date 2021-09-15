@@ -10,10 +10,6 @@ set -gx MANPAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 
-function phone
-	ftp ftp://192.168.43.1:2221
-end
-
 function cmd
 	echo CMD: $argv; echo
 	$argv
@@ -25,6 +21,22 @@ end
 
 function hs
 	cmd home-manager switch
+end
+
+function phone
+	ftp ftp://192.168.43.1:2221
+end
+
+function gpull
+	git pull origin (git branch | sed 's/^* //')
+end
+
+function gpush
+	if [ -z "$argv" ]
+		git push origin (git branch | sed 's/^* //')
+	else
+		git push origin $argv
+	end
 end
 
 #fetch battery left
@@ -149,6 +161,19 @@ else if man yay
   alias i "yay -Sy"
   alias r "yay -R"
 end
+
+#some git alias
+alias gi 'git init;git branch -M main'
+alias gc 'git commit'
+alias gb 'git branch'
+alias gr 'git remote'
+alias ga 'git add'
+alias gl 'git log'
+alias gd 'git diff'
+alias gs 'git status'
+alias gck 'git checkout'
+alias gx 'git reset --hard'
+alias gname 'git branch -M main'
 
 alias fix-headphones 'alsactl restore' #https://github.com/NixOS/nixpkgs/issues/34460
 alias usb 'cd /run/media/creator54/'
