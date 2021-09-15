@@ -39,6 +39,15 @@ function gpush
 	end
 end
 
+function ga
+	if [ -z "$argv" ]
+		git add .
+	else
+		git add $argv
+	end
+end
+
+
 #fetch battery left
 function BATT
 	upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep percentage | grep -Po "\\d+"
@@ -116,6 +125,14 @@ function bind_bang
     end
 end
 
+function c
+	if [ -z $argv ]
+		cd ..
+	else
+		cd $argv
+	end
+end
+
 #broken
 function cdd
   if test -d $argv
@@ -148,7 +165,6 @@ end
 
 alias d "cd ~/dev"
 alias e $EDITOR
-alias c "cd .."
 alias v $PAGER
 
 if uname -a | grep NixOS &> /dev/null
@@ -167,7 +183,6 @@ alias gi 'git init;git branch -M main'
 alias gc 'git commit'
 alias gb 'git branch'
 alias gr 'git remote'
-alias ga 'git add'
 alias gl 'git log'
 alias gd 'git diff'
 alias gs 'git status'
