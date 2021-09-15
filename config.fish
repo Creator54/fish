@@ -111,7 +111,7 @@ function cdd
   else
     read -p "$argv" "doesn't exist create " ans
 		if [ "$ans" = "" ]
-      mkdir $argv;
+      mkdir -p $argv;
       cd $argv;
     end
   end
@@ -150,6 +150,7 @@ else if man yay
   alias r "yay -R"
 end
 
+alias fix-headphones 'alsactl restore' #https://github.com/NixOS/nixpkgs/issues/34460
 alias usb 'cd /run/media/creator54/'
 alias clip "xclip -sel clip"
 alias stream "cvlc --fullscreen --aspect-ratio 16:9 --loop"
