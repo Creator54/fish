@@ -96,7 +96,7 @@ function i
 end
 
 function x
-  if [ -d $argv ]
+  if [ -d $argv ]; count $argv > /dev/null
     rm -rf $argv
   else
     rm $argv
