@@ -26,6 +26,8 @@ end
 function v
 	if string match -r ".jpg|.png|.svg" $argv &> /dev/null
 		view_pic $argv
+	else if string match -q "*.pdf" $argv
+		zathura $argv &> /dev/null
 	else
 		$PAGER $argv
 	end
