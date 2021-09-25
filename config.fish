@@ -26,6 +26,8 @@ end
 function v
 	if [ -z "$argv" ]
 		echo "Do pass a file to view !"
+	else if [ -d "$argv" ]
+		echo Files Count: (count $argv/*); ls -sh $argv
 	else if string match -r ".jpg|.png|.svg" $argv &> /dev/null
 		view_pic $argv
 	else if string match -q "*.pdf" $argv
