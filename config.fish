@@ -24,7 +24,7 @@ function hs
 end
 
 function v
-	if string match -rq ".jpg|.png|.svg" $argv
+	if string match -r ".jpg|.png|.svg" $argv &> /dev/null
 		view_pic $argv
 	else
 		$PAGER $argv
