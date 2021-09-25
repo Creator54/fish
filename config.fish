@@ -30,6 +30,8 @@ function v
 		echo Files Count: (count $argv/*); ls -sh $argv
 	else if string match -r ".jpg|.png|.svg" $argv &> /dev/null
 		view_pic $argv
+	else if string match -r ".mp4|.mkv|.mp3" $argv &> /dev/null
+		mpv $argv
 	else if string match -q "*.pdf" $argv
 		zathura $argv &> /dev/null
 	else
