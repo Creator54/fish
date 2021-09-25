@@ -23,6 +23,14 @@ function hs
 	cmd home-manager switch
 end
 
+function v
+	if string match -rq ".jpg|.png|.svg" $argv
+		view_pic $argv
+	else
+		$PAGER $argv
+	end
+end
+
 function phone
 	ftp ftp://192.168.43.1:2221
 end
@@ -165,7 +173,6 @@ end
 
 alias d "cd ~/dev"
 alias e $EDITOR
-alias v $PAGER
 
 if uname -a | grep NixOS &> /dev/null
   alias s "nix search"
