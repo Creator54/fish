@@ -112,8 +112,8 @@ function fish_greeting
 end
 
 function i
-	if ! nix-env -iA nixos.$argv
-		nix-env -iA nixpkgs.$argv;
+	if ! nix-env -iA nixos.$argv &| nom
+		nix-env -iA nixpkgs.$argv &| nom
 	end
 end
 
@@ -150,6 +150,9 @@ end
 function c
 	if [ -z $argv ]
 		cd ..
+	else if [ -e $argv ]
+		set filename (echo $argv | cut -d/ -f3)
+		cd (string replace $filename '' $argv)
 	else
 		cd $argv
 	end
