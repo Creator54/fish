@@ -45,6 +45,14 @@ function v
 	end
 end
 
+function ssh-setup
+	ssh-keygen -t ed25519 -C 'hi.creator54@gmail.com'
+	eval (ssh-agent -c)
+	ssh-add ~/.ssh/id_ed25519
+	cat ~/.ssh/id_ed25519.pub | clip
+	echo "Copied SSH Key to Clipboard, now paste it on Github."
+end
+
 function phone
 	ftp ftp://192.168.43.1:2221
 end
@@ -213,7 +221,6 @@ alias gs 'git status'
 alias gck 'git checkout'
 alias gx 'git reset --hard'
 alias gname 'git branch -M main'
-
 
 alias check 'cmd nix-shell -I nixpkgs=/home/creator54/nixpkgs -p'
 alias l 'ls -sLShA'
