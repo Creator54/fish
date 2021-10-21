@@ -9,6 +9,8 @@ set -gx PAGER "bat"
 set -gx MANPAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
+set up_cached '0'
+set down_cached '0'
 
 function cmd
 	echo CMD: $argv; echo
@@ -53,6 +55,27 @@ function ssh-setup
 	echo "Copied SSH Key to Clipboard, now paste it on Github."
 end
 
+function getip
+	if string match -r 'github.io' $argv &> /dev/null
+		dig $argv|sed -n 12p|cut -f3
+	else
+		dig $argv | sed -n 12p | cut -f6
+	end
+end
+
+function ssd-price
+	set amzn (curl -s 'https://www.amazon.in/Crucial-BX500-240GB-2-5-inch-CT240BX500SSD1/dp/B07G3YNLJB/ref=mp_s_a_1_3?dchild=1&keywords=ssd&qid=1634231023&qsid=257-2724214-9903254&sr=8-3&sres=B07G3YNLJB%2CB07KCGPRMQ%2CB076Y374ZH%2CB089QXQ1TV%2CB08FJB98F1%2CB07YFF3JCN%2CB078WYS5K6%2CB07WFNQ9JF%2CB093V4NHV5%2CB079T8BZMG%2CB07HCCWWWF%2CB099NSRP29%2CB08YYMG4X2%2CB07DJ2TP6H&srpt=COMPUTER_DRIVE_OR_STORAGE' -H 'user-agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1'| pup 'span#atfRedesign_priceblock_priceToPay' | head -n 6 | tail -n 1 | tr -d ,)
+	set fk (curl -s 'https://www.flipkart.com/crucial-bx500-240-gb-laptop-desktop-internal-solid-state-drive-ct240bx500ssd1/p/itm47385821d256d?pid=ACCFNFUKF9BKE5PS&lid=LSTACCFNFUKF9BKE5PSURBYLC&marketplace=FLIPKART&q=ssd&store=6bo%2Fjdy&spotlightTagId=BestsellerId_6bo%2Fjdy&srno=s_1_3&otracker=search&otracker1=search&fm=SEARCH&iid=6418dbd6-8f52-4990-be00-efc3b03396cc.ACCFNFUKF9BKE5PS.SEARCH&ppt=sp&ppn=sp&ssid=fieava78gg0000001634230842661&qH=d4576b3b305e1df6' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0'| pup 'div' | head -n 334|tail -n 1 | awk '{$1=$1};1' | cut -c4- | tr -d ,)
+
+	if bash -c '[ "$amzn" = "$fk" ]' #doesnt work in fish so ;(
+		echo $fk/FK
+	else if bash -c '[ "$amzn" -gt "$fk" ]'
+		echo $fk/FK
+	else
+		echo $amzn/AMZN
+	end
+end
+
 function phone
 	ftp ftp://192.168.43.1:2221
 end
@@ -77,10 +100,21 @@ function ga
 	end
 end
 
-
 #fetch battery left
-function BATT
-	upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep percentage | grep -Po "\\d+"
+function battery
+	if [ -z "$argv" ]
+		acpi -i
+		#upower -i (upower -e | grep 'BAT') | grep -E "state|time\ to\ full|percentage"
+	else if string match -r "state" $argv &> /dev/null
+		acpi -i|head -n 1|cut -d' ' -f 3
+		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|head -n 1|cut -c25-
+	else if string match -r "percentage|%|charge" $argv &> /dev/null
+		acpi -i|head -n 1|cut -d' ' -f 4
+		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|tail -n 1|cut -c25-
+	else if string match -r "time|left|time left" $argv &> /dev/null
+		acpi -i|head -n 1|cut -d' ' -f 5
+		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|sed -n 2p|cut -c25-
+	end
 end
 
 #python development
@@ -139,10 +173,14 @@ function update
 end
 
 function get
-	if echo $argv | grep .git &> /dev/null
+	if [ -z $argv ]
+		echo "You do need to pass a link to download !"
+	else if echo $argv | grep .github.com &> /dev/null
 		git clone $argv;
+	else if string match -r ".jpg|.png|.svg|.mp3|.mp4|.zip|.tar|.gz" $argv &> /dev/null
+		axel -n 10 $argv #this makes 10 connections, thus speeds the download by 10x the general connection
 	else
-		wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N "$argv"
+		wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N "$argv" and echo "Fetched $argv" or echo "Couldn't fetch !"
 	end
 end
 
@@ -230,7 +268,7 @@ alias clip "xclip -sel clip"
 alias stream "cvlc --fullscreen --aspect-ratio 16:9 --loop"
 alias size "gdu"
 alias keys "screenkey --no-systray -t 0.4"
-alias man batman
+#alias man batman
 alias usage "baobab"
 alias ftp "ncftp"
 alias gallery "gthumb"
@@ -249,8 +287,8 @@ alias view_pic "kitty +kitten icat" #for viewing images in kitty
 #for stuff inside this dir
 set dir '~/.config/fish/scripts'
 
-for i in extract_frame ralias reduce rpattern yt ytpart anime
-	if [ $i = "yt" ]
+for i in extract_frame ralias reduce rpattern yt ytpart anime wall traffic
+	if test $i="yt"; or test $i="traffic"
 		alias $i "$dir/$i" | sh
 	else
 		alias $i "$dir/$i"
