@@ -6,11 +6,12 @@ set -gx BROWSER brave
 set -gx WALLPAPERS '/home/creator54/wallpapers'
 set -gx CPLUS_INCLUDE_PATH /nix/store/s6scq5f4vk7pmxbch63byqw0zhf988j8-libc++-11.1.0/include/c++/v1
 set -gx PAGER "bat"
-set -gx MANPAGER "bat"
+#set -gx MANPAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 set up_cached '0'
 set down_cached '0'
+set -xg count '0' #set as environment variable so its doesnt gets reset on each new term
 
 function cmd
 	echo CMD: $argv; echo
@@ -29,6 +30,21 @@ end
 
 function hs
 	cmd home-manager switch
+end
+
+function record
+	set name (echo (date '+%a-%F')-$count)
+	#	if string match -r 'vcam' $argv &> /dev/null
+	#		cmd ffmpeg -f x11grab -i $DISPLAY.0 -i /dev/video0
+	#		~/Screenrecords/$name+cam.mkv needs fixes
+	if string match -r 'v|video|no audio' $argv &> /dev/null
+		cmd ffmpeg -f x11grab -i $DISPLAY.0 ~/Screenrecords/$name.mkv
+	else if string match -r 'cam|camera' $argv &> /dev/null
+		cmd ffmpeg -i /dev/video0 ~/Screenrecords/$name-cam.mkv
+	else
+		cmd ffmpeg -f x11grab -i $DISPLAY.0 -f alsa -i default -c:v libx264 -c:a flac ~/Screenrecords/$name.mkv #1 is for computer audio, 2 is for mic generally
+	end
+	set count (math $count +1)
 end
 
 function v
@@ -154,8 +170,10 @@ function fish_greeting
 end
 
 function i
-	if ! nix-env -iA nixos.$argv &| nom
-		nix-env -iA nixpkgs.$argv &| nom
+	if [ $argv[1] = "-u" ]
+		echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv[2]
+	else
+		echo "Channel: NIXOS" && nix-env -iA nixos.$argv; or echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv
 	end
 end
 
@@ -268,7 +286,8 @@ alias clip "xclip -sel clip"
 alias stream "cvlc --fullscreen --aspect-ratio 16:9 --loop"
 alias size "gdu"
 alias keys "screenkey --no-systray -t 0.4"
-#alias man batman
+alias man batman
+alias headset "bluetoothctl connect 20:20:10:21:A4:8C"
 alias usage "baobab"
 alias ftp "ncftp"
 alias gallery "gthumb"
@@ -283,6 +302,7 @@ alias pdfviewer "okular"
 alias copy "rsync --info=progress2 -auvz"
 alias fget "wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N"
 alias view_pic "kitty +kitten icat" #for viewing images in kitty
+alias torrent "/o.webtorrent.WebTorrent"
 
 #for stuff inside this dir
 set dir '~/.config/fish/scripts'
