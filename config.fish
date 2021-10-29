@@ -32,6 +32,12 @@ function hs
 	cmd home-manager switch
 end
 
+function line
+	tput smacs
+		printf "%s\n" 'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss'
+  tput rmacs
+end
+
 function record
 	set name (echo (date '+%a-%F')-$count)
 	#	if string match -r 'vcam' $argv &> /dev/null
@@ -60,6 +66,22 @@ function v
 		zathura $argv &> /dev/null
 	else
 		$PAGER $argv
+	end
+end
+
+function s
+	if [ $argv[1] = "-w" ]
+		if string match -r '!' $argv[2] &>/dev/null
+			exec $BROWSER $argv[2] $argv[3]
+		else
+			printf "From the WEB 2.0"
+			ddgr $argv[2]
+		end
+	else if [ $argv[1] = "-l" ]
+		printf "From nix-locate:\n\n"
+		nix-locate $argv[2]
+	else
+		printf "From nix search:\n\n" && nix search $argv; or line && printf "\nFrom nix-locate:\n\n" && nix-locate bin/$argv
 	end
 end
 
@@ -140,7 +162,7 @@ end
 
 #for yt music
 function play
-	yt -m $argv
+	yt -l -m $argv
 end
 
 #Verbose mv
@@ -256,7 +278,6 @@ alias d "cd ~/dev"
 alias e $EDITOR
 
 if uname -a | grep NixOS &> /dev/null
-	alias s "nix search"
 	alias r "nix-env --uninstall"
 	alias q "nix-env -q"
 	alias n "nvidia-offload"
