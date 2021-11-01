@@ -64,6 +64,9 @@ function v
 		mpv $argv
 	else if string match -q "*.pdf" $argv
 		zathura $argv &> /dev/null
+	else if string match -q "*.iso" $argv
+		echo "Copied PATH=$argv to clipboard"
+		echo $argv | clip
 	else
 		$PAGER $argv
 	end
@@ -78,6 +81,10 @@ function s
 				case '-l'
 					printf "From nix-locate:\n\n"
 					nix-locate $argv[2]
+				case '-f'
+					set file (fzf -q "$argv[2]")
+					echo $file | clip
+					v $file
 				case '-w'
 					switch $argv[2]
 						case '!g'
@@ -94,6 +101,7 @@ function s
 					printf "s query 		: does nix-search, nix-locate if nix-search fails\n"
 					printf "s -v query 		: does video search,plays via mpv\n"
 					printf "s -l query 		: does nix-locate\n"
+					printf "s -f query 		: does a file search, opens as per function v and copies path to clipboard\n"
 					printf "s -w query 		: does WEB search(ddg results)\n"
 					printf "s -w !g query 		: does WEB search(google results)\n"
 					printf "s -h			: help menu\n\n"
@@ -240,7 +248,7 @@ function get
 		echo "You do need to pass a link to download !"
 	else if echo $argv | grep .github.com &> /dev/null
 		git clone $argv;
-	else if string match -r ".jpg|.png|.svg|.mp3|.mp4|.zip|.tar|.gz" $argv &> /dev/null
+	else if string match -r ".jpg|.png|.svg|.mp3|.mp4|.mkv|.zip|.tar|.gz" $argv &> /dev/null
 		axel -n 10 $argv #this makes 10 connections, thus speeds the download by 10x the general connection
 	else
 		wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N "$argv" and echo "Fetched $argv" or echo "Couldn't fetch !"
@@ -351,7 +359,7 @@ alias torrent "/o.webtorrent.WebTorrent"
 #for stuff inside this dir
 set dir '~/.config/fish/scripts'
 
-for i in extract_frame ralias reduce rpattern yt ytpart anime wall traffic
+for i in extract_frame ralias reduce rpattern yt ytpart anime wall traffic tuxi
 	if test $i="yt"; or test $i="traffic"
 		alias $i "$dir/$i" | sh
 	else
