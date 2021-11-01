@@ -70,18 +70,38 @@ function v
 end
 
 function s
-	if [ $argv[1] = "-w" ]
-		if string match -r '!' $argv[2] &>/dev/null
-			exec $BROWSER $argv[2] $argv[3]
-		else
-			printf "From the WEB 2.0"
-			ddgr $argv[2]
-		end
-	else if [ $argv[1] = "-l" ]
-		printf "From nix-locate:\n\n"
-		nix-locate $argv[2]
-	else
-		printf "From nix search:\n\n" && nix search $argv; or line && printf "\nFrom nix-locate:\n\n" && nix-locate bin/$argv
+	switch $argv[1]
+		case '-*'
+			switch $argv[1]
+				case '-v'
+					mpv (fzf -q "$argv[2]") > /dev/null
+				case '-l'
+					printf "From nix-locate:\n\n"
+					nix-locate $argv[2]
+				case '-w'
+					switch $argv[2]
+						case '!g'
+							printf "From the WEB 2.0:\n"
+							echo "Google results:"
+							googler $argv[3]
+						case '*'
+							printf "From the WEB 2.0:\n"
+							echo "Duckduckgo results:"
+							ddgr $argv[3]
+					end
+				case '-h'
+					printf "What this function can do ?\n\n"
+					printf "s query 		: does nix-search, nix-locate if nix-search fails\n"
+					printf "s -v query 		: does video search,plays via mpv\n"
+					printf "s -l query 		: does nix-locate\n"
+					printf "s -w query 		: does WEB search(ddg results)\n"
+					printf "s -w !g query 		: does WEB search(google results)\n"
+					printf "s -h			: help menu\n\n"
+				case '*'
+					printf "flag not found !\nCheckout 's -h' for all available options .\n"
+			end
+		case '*'
+			printf "From nix search:\n\n" && nix search $argv; or line && printf "\nFrom nix-locate:\n\n" && nix-locate bin/$argv
 	end
 end
 
@@ -192,10 +212,13 @@ function fish_greeting
 end
 
 function i
-	if [ $argv[1] = "-u" ]
+	if [ $argv[1] = "-l" ];or [ $argv[1] = "-latest" ]
+		echo "Channel: Creator54/nixpkgs"
+		nix-env -f /home/creator54/nixpkgs -iA $argv[2]
+	else if [ $argv[1] = "-u" ];or [ $argv[1] = "-update" ]
 		echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv[2]
 	else
-		echo "Channel: NIXOS" && nix-env -iA nixos.$argv; or echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv
+		echo "Channel: NIXOS" && nix-env -iA nixos.$argv; or echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv; or echo "Channel: Creator54/nixpkgs" && nix-env -f /home/creator54/nixpkgs -iA $argv
 	end
 end
 
