@@ -76,6 +76,12 @@ function s
 	switch $argv[1]
 		case '-*'
 			switch $argv[1]
+				case '-y'
+					yt $argv[2]
+				case '-s'
+					play $argv[2]
+				case '-a'
+					anime $argv[2]
 				case '-v'
 					mpv (fzf -q "$argv[2]") > /dev/null
 				case '-l'
@@ -88,22 +94,29 @@ function s
 				case '-w'
 					switch $argv[2]
 						case '!g'
-							printf "From the WEB 2.0:\n"
+							echo "From the WEB 2.0:"
 							echo "Google results:"
 							googler $argv[3]
+						case '!*'
+							echo "Searching $argv[3] @"(echo $argv[2]|cut -d! -f2 )
+							ddgr $argv[2] $argv[3] | head -n 1
 						case '*'
-							printf "From the WEB 2.0:\n"
+							echo "From the WEB 2.0:"
 							echo "Duckduckgo results:"
-							ddgr $argv[3]
+							ddgr $argv[2]
 					end
 				case '-h'
 					printf "What this function can do ?\n\n"
-					printf "s query 		: does nix-search, nix-locate if nix-search fails\n"
-					printf "s -v query 		: does video search,plays via mpv\n"
-					printf "s -l query 		: does nix-locate\n"
-					printf "s -f query 		: does a file search, opens as per function v and copies path to clipboard\n"
-					printf "s -w query 		: does WEB search(ddg results)\n"
-					printf "s -w !g query 		: does WEB search(google results)\n"
+					echo "s query 		: does nix-search, nix-locate if nix-search fails"
+					echo "s -v query 		: does video search,plays via mpv"
+					echo "s -l query 		: does nix-locate, find libs"
+					echo "s -a query 		: does anime search"
+					echo "s -s query 		: does yt-audio search"
+					echo "s -y query 		: does yt-video search"
+					echo "s -f query 		: does a file search, opens as per function v and copies path to clipboard"
+					echo "s -w query 		: does WEB search(ddg results)"
+					echo "s -w !g query 		: does WEB search(google results)"
+					echo "s -w !domain 		: does web search on domain specified(e.g !google hello: searches hello on google.com), opens on browser"
 					printf "s -h			: help menu\n\n"
 				case '*'
 					printf "flag not found !\nCheckout 's -h' for all available options .\n"
