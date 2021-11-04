@@ -43,12 +43,12 @@ end
 
 function record
 	set name (echo (date '+%a-%F')-$count)
-	#	if string match -r 'vcam' $argv &> /dev/null
+	#	if string match -qr 'vcam' $argv
 	#		cmd ffmpeg -f x11grab -i $DISPLAY.0 -i /dev/video0
 	#		~/Screenrecords/$name+cam.mkv needs fixes
-	if string match -r 'v|video|no audio' $argv &> /dev/null
+	if string match -qr 'v|video|no audio' $argv
 		cmd ffmpeg -f x11grab -i $DISPLAY.0 ~/Screenrecords/$name.mkv
-	else if string match -r 'cam|camera' $argv &> /dev/null
+	else if string match -qr 'cam|camera' $argv
 		cmd ffmpeg -i /dev/video0 ~/Screenrecords/$name-cam.mkv
 	else
 		cmd ffmpeg -f x11grab -i $DISPLAY.0 -f alsa -i default -c:v libx264 -c:a flac ~/Screenrecords/$name.mkv #1 is for computer audio, 2 is for mic generally
@@ -61,9 +61,9 @@ function v
 		echo "Do pass a file to view !"
 	else if [ -d "$argv" ]
 		echo Files Count: (count $argv/*); ls -sh $argv
-	else if string match -r ".jpg|.png|.svg" $argv &> /dev/null
+	else if string match -qr ".jpg|.png|.svg" $argv
 		view_pic $argv
-	else if string match -r ".mp4|.mkv|.mp3" $argv &> /dev/null
+	else if string match -qr ".mp4|.mkv|.mp3" $argv
 		mpv $argv
 	else if string match -q "*.pdf" $argv
 		zathura $argv &> /dev/null
@@ -143,7 +143,7 @@ function ssh-setup
 end
 
 function getip
-	if string match -r 'github.io' $argv &> /dev/null
+	if string match -qr 'github.io' $argv
 		dig $argv|sed -n 12p|cut -f3
 	else
 		dig $argv | sed -n 12p | cut -f6
@@ -192,13 +192,13 @@ function battery
 	if [ -z "$argv" ]
 		acpi -i
 		#upower -i (upower -e | grep 'BAT') | grep -E "state|time\ to\ full|percentage"
-	else if string match -r "state" $argv &> /dev/null
+	else if string match -qr "state" $argv
 		acpi -i|head -n 1|cut -d' ' -f 3
 		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|head -n 1|cut -c25-
-	else if string match -r "percentage|%|charge" $argv &> /dev/null
+	else if string match -qr "percentage|%|charge" $argv
 		acpi -i|head -n 1|cut -d' ' -f 4
 		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|tail -n 1|cut -c25-
-	else if string match -r "time|left|time left" $argv &> /dev/null
+	else if string match -qr "time|left|time left" $argv
 		acpi -i|head -n 1|cut -d' ' -f 5
 		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|sed -n 2p|cut -c25-
 	end
@@ -269,7 +269,7 @@ function get
 		echo "You do need to pass a link to download !"
 	else if echo $argv | grep .github.com &> /dev/null
 		git clone $argv;
-	else if string match -r ".jpg|.png|.svg|.mp3|.mp4|.mkv|.zip|.tar|.gz" $argv &> /dev/null
+	else if string match -qr ".jpg|.png|.svg|.mp3|.mp4|.mkv|.zip|.tar|.gz" $argv
 		axel -n 10 $argv #this makes 10 connections, thus speeds the download by 10x the general connection
 	else
 		wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N "$argv" and echo "Fetched $argv" or echo "Couldn't fetch !"
