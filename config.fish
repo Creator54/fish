@@ -84,7 +84,11 @@ function s
 				case '-s'
 					play $argv[2]
 				case '-a'
-					anime $argv[2]
+					if string match -qr '^[0-9]+$' $argv[2] #usage: s -a 360 $query
+						anime -q $argv[2] $argv[3]
+					else
+						anime $argv[2]
+					end
 				case '-v'
 					mpv (fzf -q "$argv[2]") > /dev/null
 				case '-l'
