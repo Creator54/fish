@@ -118,6 +118,7 @@ function s
 					echo "s -v query 		: does video search,plays via mpv"
 					echo "s -l query 		: does nix-locate, find libs"
 					echo "s -a query 		: does anime search"
+					echo "s -a 360/480/*** query 	: does anime search with quality"
 					echo "s -s query 		: does yt-audio search"
 					echo "s -y query 		: does yt-video search"
 					echo "s -f query 		: does a file search, opens as per function v and copies path to clipboard"
