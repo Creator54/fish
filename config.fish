@@ -368,7 +368,6 @@ alias ftp "ncftp"
 alias gallery "gthumb"
 alias calc "eva"
 alias clipboard "copyq clipboard"
-alias ufetch ".//.config/fish/scripts/ufetch"
 alias lectures "cd /run/mount/data1/Lectures/Study"
 alias ytdl "youtube-dl"
 alias sys "cd /etc/nixos"
@@ -377,12 +376,12 @@ alias pdfviewer "okular"
 alias copy "rsync --info=progress2 -auvz"
 alias fget "wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N"
 alias view_pic "kitty +kitten icat" #for viewing images in kitty
-alias torrent "/o.webtorrent.WebTorrent"
+alias torrent "io.webtorrent.WebTorrent"
 
 #for stuff inside this dir
 set dir '~/.config/fish/scripts'
 
-for i in extract_frame ralias reduce rpattern yt ytpart anime wall traffic tuxi
+for i in (ls /home/creator54/.config/fish/scripts/)
 	if test $i="yt"; or test $i="traffic"
 		alias $i "$dir/$i" | sh
 	else
