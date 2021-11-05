@@ -1,12 +1,10 @@
 set -gx TERM kitty
-set -gx TERMINAL kitty
+set -gx TERMINAL $TERM
 set -gx EDITOR vim
 set -gx VISUAL vim
 set -gx BROWSER "links -g 'https://duckduckgo.com'"
 set -gx WALLPAPERS '/home/creator54/wallpapers'
-set -gx CPLUS_INCLUDE_PATH /nix/store/s6scq5f4vk7pmxbch63byqw0zhf988j8-libc++-11.1.0/include/c++/v1
 set -gx PAGER "bat"
-#set -gx MANPAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 set up_cached '0'
@@ -191,18 +189,23 @@ end
 
 #fetch battery left
 function battery
-	if [ -z "$argv" ]
-		acpi -i
-		#upower -i (upower -e | grep 'BAT') | grep -E "state|time\ to\ full|percentage"
-	else if string match -qr "state" $argv
+	if string match -qr "state" $argv
 		acpi -i|head -n 1|cut -d' ' -f 3
-		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|head -n 1|cut -c25-
 	else if string match -qr "percentage|%|charge" $argv
 		acpi -i|head -n 1|cut -d' ' -f 4
-		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|tail -n 1|cut -c25-
 	else if string match -qr "time|left|time left" $argv
 		acpi -i|head -n 1|cut -d' ' -f 5
-		#upower -i (upower -e | grep 'BAT') | grep -E "state|to\ full|percentage"|sed -n 2p|cut -c25-
+	else if [ $argv="h" ]
+		line
+		echo "battery options"
+		line
+		echo "Options:"
+		echo "state: 			charging/discharging"
+		echo "percentage/%/charge: 	shows battery left"
+		echo "time/left/time left: 	shows remaing time left to charge"
+		line
+	else
+		acpi -i
 	end
 end
 
