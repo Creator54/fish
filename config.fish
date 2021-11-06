@@ -70,6 +70,8 @@ function v
 	else if string match -q "*.iso" $argv
 		echo "Copied PATH=$argv to clipboard"
 		echo $argv | clip
+	else if string match -qr ".md" $argv
+		glow $argv -p $PAGER
 	else
 		$PAGER $argv
 	end
