@@ -258,14 +258,6 @@ function i
 	end
 end
 
-function x
-	if [ -d $argv ]; count $argv > /dev/null
-		rm -rf $argv
-	else
-		rm $argv
-	end
-end
-
 function update
 	nix-channel --update nixpkgs
 	nix-env -u '*'
@@ -344,8 +336,6 @@ end
 
 # https://superuser.com/questions/719531/what-is-the-equivalent-of-bashs-and-in-the-fish-shell
 
-alias d "cd ~/dev"
-
 if uname -a | grep NixOS &> /dev/null
 	alias r "nix-env --uninstall"
 	alias q "nix-env -q"
@@ -369,6 +359,8 @@ alias gx 'git reset --hard'
 alias gname 'git branch -M main'
 
 alias check 'cmd nix-shell -I nixpkgs=/home/creator54/nixpkgs -p'
+alias d "cd ~/dev"
+alias x "rm -rf $argv"
 alias l 'ls -sLShA'
 alias fix-headphones 'alsactl restore' #https://github.com/NixOS/nixpkgs/issues/34460
 alias usb 'cd /run/media/creator54/'
