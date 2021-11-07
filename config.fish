@@ -2,7 +2,7 @@ set -gx TERM kitty
 set -gx TERMINAL $TERM
 set -gx EDITOR vim
 set -gx VISUAL vim
-set -gx BROWSER "links -g 'https://duckduckgo.com'"
+set -gx BROWSER brave
 set -gx WALLPAPERS '/home/creator54/wallpapers'
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
@@ -57,14 +57,14 @@ end
 function v
 	if [ -z "$argv" ]
 		echo "Do pass a file to view !"
-	else if string match -qr "http|https" $argv
-		get $argv
 	else if [ -d "$argv" ]
 		echo Files Count: (count $argv/*); ls -sh $argv
 	else if string match -qr ".jpg|.png|.svg" $argv
 		view_pic $argv
-	else if string match -qr ".mp4|.mkv|.mp3" $argv
+	else if string match -qr ".mp4|.mkv|.mp3|.opus" $argv
 		mpv $argv
+	else if string match -qr "http|https" $argv
+		get $argv
 	else if string match -q "*.pdf" $argv
 		zathura $argv &> /dev/null
 	else if string match -q "*.iso" $argv
@@ -295,21 +295,19 @@ end
 function c
 	if [ -z $argv ]
 		cd ..
+	else if [ -d $argv ]
+		cd $argv
 	else if [ -e $argv ]
 		set filename (echo $argv | cut -d/ -f3)
 		cd (string replace $filename '' $argv)
+	else if string match -qr '^[0-9]+$' $argv
+		set dir_count (pwd | grep -o "/" | wc -l)
+		set go_back (math $dir_count - $argv + 2)
+		cd (pwd | awk -F (pwd | cut -d'/' -f$go_back) '{print $1}')
 	else
-		cd $argv
-	end
-end
-
-#broken
-function cdd
-	if test -d $argv
-		cd $argv;
-	else
-		read -p "$argv" "doesn't exist create " ans
-		if [ "$ans" = "" ]
+		echo "Directory doesn't exit !"
+		read -P "Press enter to create ! " ans
+		if [ "$ans" = "y" ] || [ "$ans" = "" ]
 			mkdir -p $argv;
 			cd $argv;
 		end
@@ -339,7 +337,7 @@ alias e $EDITOR
 if uname -a | grep NixOS &> /dev/null
 	alias r "nix-env --uninstall"
 	alias q "nix-env -q"
-	alias n "nvidia-offload"
+	alias n "which nvidia-offload&> /dev/null && nvidia-offload; or nnn"
 else if man yay
 	alias s "yay -Ss"
 	alias i "yay -Sy"
@@ -367,6 +365,7 @@ alias stream "cvlc --fullscreen --aspect-ratio 16:9 --loop"
 alias size "gdu"
 alias keys "screenkey --no-systray -t 0.4"
 alias man batman
+alias fzf "fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias headset "bluetoothctl connect 20:20:10:21:A4:8C"
 alias usage "baobab"
 alias ftp "ncftp"
