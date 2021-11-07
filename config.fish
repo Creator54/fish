@@ -301,16 +301,29 @@ function c
 		set filename (echo $argv | cut -d/ -f3)
 		cd (string replace $filename '' $argv)
 	else if string match -qr '^[0-9]+$' $argv
-		set dir_count (pwd | grep -o "/" | wc -l)
-		set go_back (math $dir_count - $argv + 2)
-		cd (pwd | awk -F (pwd | cut -d'/' -f$go_back) '{print $1}')
+		if [ $argv = "1" ] #browsing through /nix/store sometimes doesnt work so workaround for now
+			cd ..
+		else
+			set dir_count (pwd | grep -o "/" | wc -l)
+			set go_back (math $dir_count - $argv + 2)
+			cd (pwd | awk -F (pwd | cut -d'/' -f$go_back) '{print $1}')
+		end
 	else
 		echo "Directory doesn't exit !"
-		read -P "Press enter to create ! " ans
+		read -P "Press enter to create ! " ans #fish use P, bash uses p
 		if [ "$ans" = "y" ] || [ "$ans" = "" ]
 			mkdir -p $argv;
 			cd $argv;
 		end
+	end
+end
+
+function e
+	switch $argv[1]
+		case '-d'
+			c $argv[2] && $EDITOR (echo $argv[2]|sed 's/^.*\///')
+		case '*'
+			$EDITOR $argv
 	end
 end
 
@@ -332,7 +345,6 @@ end
 # https://superuser.com/questions/719531/what-is-the-equivalent-of-bashs-and-in-the-fish-shell
 
 alias d "cd ~/dev"
-alias e $EDITOR
 
 if uname -a | grep NixOS &> /dev/null
 	alias r "nix-env --uninstall"
