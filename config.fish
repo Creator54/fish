@@ -275,15 +275,6 @@ function get
 	end
 end
 
-function bind_bang
-	switch (commandline -t)[-1]
-			case "!"
-				commandline -t $history[1]; commandline -f repaint
-			case "*"
-				commandline -i !
-	end
-end
-
 function c
 	if [ -z $argv ]
 		cd ..
@@ -329,9 +320,20 @@ function bind_dollar
 	end
 end
 
+function bind_bang
+	switch (commandline -t)[-1]
+			case "!"
+				commandline -t $history[1]; commandline -f repaint
+			case "*"
+				commandline -i !
+	end
+end
+
 function fish_user_key_bindings
 	bind ! bind_bang
 	bind '$' bind_dollar
+	bind '@' 'e ~/.config/nixpkgs/configs/fish/config.fish'
+	bind '#' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
 end
 
 # https://superuser.com/questions/719531/what-is-the-equivalent-of-bashs-and-in-the-fish-shell
