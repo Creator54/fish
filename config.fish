@@ -360,6 +360,7 @@ alias gck 'git checkout'
 alias gx 'git reset --hard'
 alias gname 'git branch -M main'
 
+alias apps "~/Apps-data/apps"
 alias check 'cmd nix-shell -I nixpkgs=/home/creator54/nixpkgs -p'
 alias d "cd ~/dev"
 alias x "rm -rf $argv"
