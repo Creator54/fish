@@ -95,7 +95,7 @@ function s
 					mpv (fzf -q "$argv[2]") > /dev/null
 				case '-l'
 					printf "From nix-locate:\n\n"
-					nix-locate $argv[2]
+					nix-locate $argv[2]; or echo "Seems to be 1st time .." && echo "Running nix-index first !" && line && nix-index && nix-locate $argv[2]
 				case '-f'
 					set file (fzf -q "$argv[2]")
 					echo $file | clip
