@@ -1,6 +1,8 @@
 [submodule "scripts"]
 	path = scripts
 	url = git@github.com:Creator54/scripts.git
+	branch = master
 [submodule "mzish"]
 	path = mzish
 	url = git@github.com:Creator54/mzish.git
+	branch = v2
