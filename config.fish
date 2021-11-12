@@ -91,7 +91,7 @@ function v
 	else if [ -d "$argv" ]
 		echo Files Count: (count $argv/*); ls -sh $argv
 	else if string match -qr ".jpg|.png|.svg" $argv
-		view_pic $argv
+		rm -rf (sxiv -o $argv) && commandline -f repaint
 	else if string match -qr ".mp4|.mkv|.mp3|.opus" $argv
 		mpv $argv
 	else if string match -qr "http|https" $argv
@@ -369,8 +369,8 @@ end
 function fish_user_key_bindings
 	bind ! bind_bang
 	bind '$' bind_dollar
-	bind '' 'sudo rfkill unblock all; sudo systemctl restart bluetooth' 
-	bind '@' 'e ~/.config/nixpkgs/configs/fish/config.fish'
+	bind '' 'sudo rfkill unblock all; sudo systemctl restart bluetooth && commandline -f repaint' 
+	bind '@' 'e ~/.config/nixpkgs/configs/fish/config.fish && commandline -f repaint'
 	bind '#' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
 end
 
