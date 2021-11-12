@@ -1,6 +1,6 @@
 [submodule "scripts"]
 	path = scripts
-	url = https://github.com/creator54/scripts.git
+	url = git@github.com:Creator54/scripts.git
 [submodule "mzish"]
 	path = mzish
-	url = https://github.com/creator54/mzish
+	url = git@github.com:Creator54/mzish.git
