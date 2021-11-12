@@ -398,7 +398,6 @@ alias gck 'git checkout'
 alias gx 'git reset --hard'
 alias gname 'git branch -M main'
 
-alias netspeed "printf '龍 %s' (traffic wlp3s0 | tail -n 1 | cut -d' ' -f 3)"
 alias apps "~/Apps-data/apps"
 alias dwmblocks "~/Apps-data/nixpkgs/wm/wm-configs/dwm/dwmblocks/dwmblocks"
 alias check 'cmd nix-shell -I nixpkgs=/home/creator54/nixpkgs -p'
