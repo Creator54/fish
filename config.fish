@@ -48,6 +48,28 @@ function blur
 	end
 end
 
+function cpu
+	set cpu_val (grep -o "^[^ ]*" /proc/loadavg)
+	set core_0 (printf "%d" (sensors|grep 'Core 0:' | awk '{ print $3}') 2>/dev/null)
+  set core_1 (printf "%d" (sensors|grep 'Core 1:' | awk '{ print $3}') 2>/dev/null)
+  set core_2 (printf "%d" (sensors|grep 'Core 2:' | awk '{ print $3}') 2>/dev/null)
+  set core_3 (printf "%d" (sensors|grep 'Core 3:' | awk '{ print $3}') 2>/dev/null)
+  set temp (math -s0 "($core_0+$core_1+$core_2+$core_3)"/4)
+  echo "$cpu_val/$temp°C"
+end
+
+function audio
+  if [ (amixer get Master toggle | xargs | awk '{print $NF}') = "[off]" ]
+    printf "婢 %s" (amixer sget Master | awk -F"[][]" '/Left/ { print $2 }'|cut -d'%' -f1 | xargs)
+  else
+    printf " %s" (amixer sget Master | awk -F"[][]" '/Left/ { print $2 }'|cut -d'%' -f1 | xargs)
+	end
+
+  if [ (headset|tail -n 1|cut -d' ' -f2) = "successful" ]
+    printf ":%s\n" (bluetooth_battery 20:20:10:21:A4:8C | cut -d' ' -f6)
+	end
+end
+
 function record
 	set name (echo (date '+%a-%F')-$count)
 	#	if string match -qr 'vcam' $argv
@@ -206,6 +228,12 @@ function battery
 		acpi -i|head -n 1|cut -d' ' -f 4
 	else if string match -qr "time|left|time left" $argv
 		acpi -i|head -n 1|cut -d' ' -f 5
+	else if string match -qr "info" $argv
+		if [ (battery state) = "Discharging," ]
+			printf " %s\n" (battery %)
+		else
+			printf "ﮣ %s\n" (battery %)
+		end
 	else if [ $argv="h" ]
 		line
 		echo "battery options"
@@ -341,6 +369,7 @@ end
 function fish_user_key_bindings
 	bind ! bind_bang
 	bind '$' bind_dollar
+	bind '' 'sudo rfkill unblock all; sudo systemctl restart bluetooth' 
 	bind '@' 'e ~/.config/nixpkgs/configs/fish/config.fish'
 	bind '#' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
 end
@@ -369,7 +398,9 @@ alias gck 'git checkout'
 alias gx 'git reset --hard'
 alias gname 'git branch -M main'
 
+alias netspeed "printf '龍 %s' (traffic wlp3s0 | tail -n 1 | cut -d' ' -f 3)"
 alias apps "~/Apps-data/apps"
+alias dwmblocks "~/Apps-data/nixpkgs/wm/wm-configs/dwm/dwmblocks/dwmblocks"
 alias check 'cmd nix-shell -I nixpkgs=/home/creator54/nixpkgs -p'
 alias d "cd ~/dev"
 alias x "rm -rf $argv"
