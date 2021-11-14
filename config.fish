@@ -7,9 +7,6 @@ set -gx WALLPAPERS '/home/creator54/wallpapers'
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
-set up_cached '0'
-set down_cached '0'
-set -xg count '0' #set as environment variable so its doesnt gets reset on each new term
 
 function cmd
 	echo CMD: $argv; echo
@@ -27,7 +24,19 @@ function he
 end
 
 function hs
-	cmd home-manager switch
+	switch $argv[1]
+		case ''
+			cmd home-manager switch
+		case '-g'
+			cmd home-manager generations | bat
+		case '-r'
+			set gobackto (home-manager generations | head -n $argv[2]|tail -n 1)
+			if [ -z $argv[2] ]
+				set argv[2] 1
+			end
+			echo "Reverting to Generation:" (echo $gobackto|cut -d' ' -f5)
+			cmd (echo $rev|cut -d' ' -f7)/activate
+	end
 end
 
 function line
@@ -37,6 +46,31 @@ function line
 		tput rmacs
 	end
 	printf "\n"
+end
+
+function yt
+	if echo $argv[1] | grep '-' &> /dev/null
+		switch $argv[1]
+			case '-y'
+				ytfzf $argv[2] $argv[3]
+			case '-d'
+				echo 'yt-dlp -f 251+247 $argv[2]' > yt-resume
+				yt-dlp -f 251+247 $argv[2] && rm -rf yt-resume #thus if this file exists shell knows download incomplete thus asks to complete
+			case '-F'
+				yt-dlp -F $argv[2]
+			case '-f'
+				yt-dlp -f $argv[2] $argv[3]
+			case '*'
+				echo "Usage: "
+				echo "yt <link> 	 			: browse via ytfzf script"
+				echo "yt -y <flag> <link> 			: browse via ytfzf script with flags"
+				echo "yt -d <link> 				: start video download default quality "
+				echo "yt -f <link> 				: use specified format to download"
+				echo "yt -F <link> 				: show available formats"
+			end
+		else
+			ytfzf $argv
+		end
 end
 
 function blur
@@ -49,8 +83,8 @@ function blur
 end
 
 function cpu
-	set cpu_val (grep -o "^[^ ]*" /proc/loadavg)
-	set core_0 (printf "%d" (sensors|grep 'Core 0:' | awk '{ print $3}') 2>/dev/null)
+  set cpu_val (grep -o "^[^ ]*" /proc/loadavg)
+  set core_0 (printf "%d" (sensors|grep 'Core 0:' | awk '{ print $3}') 2>/dev/null)
   set core_1 (printf "%d" (sensors|grep 'Core 1:' | awk '{ print $3}') 2>/dev/null)
   set core_2 (printf "%d" (sensors|grep 'Core 2:' | awk '{ print $3}') 2>/dev/null)
   set core_3 (printf "%d" (sensors|grep 'Core 3:' | awk '{ print $3}') 2>/dev/null)
@@ -63,11 +97,11 @@ function audio
     printf "婢 %s" (amixer sget Master | awk -F"[][]" '/Left/ { print $2 }'|cut -d'%' -f1 | xargs)
   else
     printf " %s" (amixer sget Master | awk -F"[][]" '/Left/ { print $2 }'|cut -d'%' -f1 | xargs)
-	end
+  end
 
   if [ (headset|tail -n 1|cut -d' ' -f2) = "successful" ]
     printf ":%s\n" (bluetooth_battery 20:20:10:21:A4:8C | cut -d' ' -f6)
-	end
+  end
 end
 
 function record
@@ -92,7 +126,7 @@ function v
 		echo Files Count: (count $argv/*); ls -sh $argv
 	else if string match -qr ".jpg|.png|.svg" $argv
 		rm -rf (sxiv -o $argv) && commandline -f repaint
-	else if string match -qr ".mp4|.mkv|.mp3|.opus" $argv
+	else if string match -qr ".mp4|.mkv|.mp3|.opus|.webm" $argv
 		mpv $argv
 	else if string match -qr "http|https" $argv
 		get $argv
@@ -278,9 +312,7 @@ end
 function fish_greeting
 	pgrep startx &> /dev/null
 	if test "$status" = "1"; and who -q | grep -e "users=1" &>/dev/null
-		clear;echo "Starting your Xserver";
 		startx &> /dev/null
-		clear;echo "Xserver killed successfully!"
 	end
 end
 
@@ -370,8 +402,8 @@ function fish_user_key_bindings
 	bind ! bind_bang
 	bind '$' bind_dollar
 	bind '' 'sudo rfkill unblock all; sudo systemctl restart bluetooth && commandline -f repaint' 
-	bind '@' 'e ~/.config/nixpkgs/configs/fish/config.fish && commandline -f repaint'
-	bind '#' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
+	#bind '' 'e ~/.config/nixpkgs/configs/fish/config.fish && commandline -f repaint'
+	#bind '' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
 end
 
 # https://superuser.com/questions/719531/what-is-the-equivalent-of-bashs-and-in-the-fish-shell
@@ -399,6 +431,7 @@ alias gx 'git reset --hard'
 alias gname 'git branch -M main'
 
 alias apps "~/Apps-data/apps"
+alias dmenu "/home/creator54/dmenu/dmenu -y 8 -p ' Packages ' -nf '#7EC7A2' -sb '#262626'"
 alias dwmblocks "~/Apps-data/nixpkgs/wm/wm-configs/dwm/dwmblocks/dwmblocks"
 alias check 'cmd nix-shell -I nixpkgs=/home/creator54/nixpkgs -p'
 alias d "cd ~/dev"
@@ -419,7 +452,6 @@ alias gallery "gthumb"
 alias calc "eva"
 alias clipboard "copyq clipboard"
 alias lectures "cd /run/mount/data1/Lectures/Study"
-alias ytdl "youtube-dl"
 alias sys "cd /etc/nixos"
 alias poweshell "pash"
 alias pdfviewer "okular"
@@ -432,11 +464,7 @@ alias torrent "io.webtorrent.WebTorrent"
 set dir '~/.config/fish/scripts'
 
 for i in (ls /home/creator54/.config/fish/scripts/)
-	if test $i="yt"; or test $i="traffic"
-		alias $i "$dir/$i" | sh
-	else
 		alias $i "$dir/$i"
-	end
 end
 
 alias minexmr "xmrig -o pool.minexmr.com:4444 -k --coin monero -a rx/0 --randomx-mode=fast -u 47yKDNQ3bcggyHwp2GrTCV9QdMEP8VzqQak1h9fyvhhRCzfQXdkdonrdUVA4h2SP1QLQX68qmVKKjjDYweng1TAL1gKGS2m"
