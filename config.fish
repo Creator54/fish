@@ -101,6 +101,20 @@ function cpu
   echo "$cpu_val/$temp°C"
 end
 
+function fgit
+	set dirname (echo $argv| cut -d'/' -f5| cut -d'.' -f1)
+	if [ -z $argv ]
+		echo "usage: fgit https://github.com/repo_owner/repo_name"
+	else
+		git clone --filter=blob:none --no-checkout --depth 1 --sparse $argv &> /dev/null 
+		cd $dirname
+		git sparse-checkout init --cone
+		read -P "get $dirname/" subdir
+		git sparse-checkout add $subdir
+		git checkout
+	end
+end
+
 function audio
   if [ (amixer get Master toggle | xargs | awk '{print $NF}') = "[off]" ]
     printf "婢 %s" (amixer sget Master | awk -F"[][]" '/Left/ { print $2 }'|cut -d'%' -f1 | xargs)
