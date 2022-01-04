@@ -2,7 +2,7 @@ set -gx TERM kitty
 set -gx TERMINAL $TERM
 set -gx EDITOR vim
 set -gx VISUAL vim
-set -gx BROWSER brave
+set -gx BROWSER firefox
 set -gx WALLPAPERS '/home/creator54/wallpapers'
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
