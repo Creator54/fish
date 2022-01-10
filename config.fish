@@ -3,7 +3,7 @@ set -gx TERMINAL $TERM
 set -gx EDITOR vim
 set -gx VISUAL vim
 set -gx BROWSER firefox
-set -gx WALLPAPERS '/home/creator54/wallpapers'
+set -gx WALLPAPERS '/home/$USER/wallpapers'
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
@@ -128,18 +128,22 @@ function audio
 end
 
 function record
-	set name (echo (date '+%a-%F')-$count)
+	set name (echo (date '+%a-%F')-(ls ~/Screenrecords/| grep (date '+%a-%F')|count))
 	#	if string match -qr 'vcam' $argv
 	#		cmd ffmpeg -f x11grab -i $DISPLAY.0 -i /dev/video0
 	#		~/Screenrecords/$name+cam.mkv needs fixes
+	set filename "/home/$USER/Screenrecords/$name"
 	if string match -qr 'v|video|no audio' $argv
-		cmd ffmpeg -f x11grab -i $DISPLAY.0 ~/Screenrecords/$name.mkv
+		cmd ffmpeg -f x11grab -i $DISPLAY.0 $filename.mkv
 	else if string match -qr 'cam|camera' $argv
-		cmd ffmpeg -i /dev/video0 ~/Screenrecords/$name-cam.mkv
+		cmd ffmpeg -i /dev/video0 $filename-cam.mkv
+	else if string match -qr 'gif' $argv
+			record
+			set filename /home/$USER/Screenrecords/(ls -c ~/Screenrecords | head -n 1|cut -d'.' -f1)
+			cmd ffmpeg  -t 44 -i $filename.mkv -vf "fps=10,scale=1920:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 $filename.gif;rm -rf $filename.mkv
 	else
-		cmd ffmpeg -f x11grab -i $DISPLAY.0 -f alsa -i default -c:v libx264 -c:a flac ~/Screenrecords/$name.mkv #1 is for computer audio, 2 is for mic generally
+		cmd ffmpeg -f x11grab -i $DISPLAY.0 -f alsa -i default -c:v libx264 -c:a flac $filename.mkv #1 is for computer audio, 2 is for mic generally
 	end
-	set count (math $count +1)
 end
 
 function v
@@ -149,7 +153,7 @@ function v
 		echo Files Count: (count $argv/*); ls -sh $argv
 	else if string match -qr ".jpg|.png|.svg" $argv
 		rm -rf (sxiv -o $argv) && commandline -f repaint
-	else if string match -qr ".mp4|.mkv|.mp3|.opus|.webm" $argv
+	else if string match -qr ".mp4|.mkv|.mp3|.opus|.webm|gif" $argv
 		mpv $argv
 	else if string match -qr "http|https" $argv
 		get $argv
@@ -225,7 +229,7 @@ function s
 end
 
 function ssh-setup
-	ssh-keygen -t ed25519 -C 'hi.creator54@gmail.com'
+	ssh-keygen -t ed25519 -C 'hi.$USER@gmail.com'
 	eval (ssh-agent -c)
 	ssh-add ~/.ssh/id_ed25519
 	cat ~/.ssh/id_ed25519.pub | clip
@@ -342,11 +346,11 @@ end
 function i
 	if [ $argv[1] = "-l" ];or [ $argv[1] = "-latest" ]
 		echo "Channel: Creator54/nixpkgs"
-		nix-env -f /home/creator54/nixpkgs -iA $argv[2]
+		nix-env -f /home/$USER/nixpkgs -iA $argv[2]
 	else if [ $argv[1] = "-u" ];or [ $argv[1] = "-update" ]
 		echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv[2]
 	else
-		echo "Channel: NIXOS" && nix-env -iA nixos.$argv; or echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv; or echo "Channel: Creator54/nixpkgs" && nix-env -f /home/creator54/nixpkgs -iA $argv
+		echo "Channel: NIXOS" && nix-env -iA nixos.$argv; or echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv; or echo "Channel: Creator54/nixpkgs" && nix-env -f /home/$USER/nixpkgs -iA $argv
 	end
 end
 
@@ -425,6 +429,7 @@ function fish_user_key_bindings
 	bind ! bind_bang
 	bind '$' bind_dollar
 	bind '' 'sudo rfkill unblock all; sudo systemctl restart bluetooth && commandline -f repaint' 
+	bind \cs 'echo Plz wait logging you in ! && ssh root@152.67.161.15 -i ~/.ssh/Oracle_cloud_key;' # "\cs" is same as ""
 	#bind '' 'e ~/.config/nixpkgs/configs/fish/config.fish && commandline -f repaint'
 	#bind '' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
 end
@@ -454,14 +459,14 @@ alias gx 'git reset --hard'
 alias gname 'git branch -M main'
 
 alias apps "~/Apps-data/apps"
-alias dmenu "/home/creator54/dmenu/dmenu -y 8 -p ' Packages ' -nf '#7EC7A2' -sb '#262626'"
+alias dmenu "/home/$USER/dmenu/dmenu -y 8 -p ' Packages ' -nf '#7EC7A2' -sb '#262626'"
 alias dwmblocks "~/Apps-data/nixpkgs/wm/wm-configs/dwm/dwmblocks/dwmblocks"
-alias check 'cmd nix-shell -I nixpkgs=/home/creator54/nixpkgs -p'
+alias check 'cmd nix-shell -I nixpkgs=/home/$USER/nixpkgs -p'
 alias d "cd ~/dev"
 alias x "rm -rf $argv"
 alias l 'ls -sLShA'
 alias fix-headphones 'alsactl restore' #https://github.com/NixOS/nixpkgs/issues/34460
-alias usb 'cd /run/media/creator54/'
+alias usb 'cd /run/media/$USER/'
 alias clip "xclip -sel clip"
 alias stream "cvlc --fullscreen --aspect-ratio 16:9 --loop"
 alias size "gdu"
@@ -486,7 +491,7 @@ alias torrent "io.webtorrent.WebTorrent"
 #for stuff inside this dir
 set dir '~/.config/fish/scripts'
 
-for i in (ls /home/creator54/.config/fish/scripts/)
+for i in (ls /home/$USER/.config/fish/scripts/)
 		alias $i "$dir/$i"
 end
 
