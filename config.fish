@@ -3,7 +3,7 @@ set -gx TERMINAL $TERM
 set -gx EDITOR vim
 set -gx VISUAL vim
 set -gx BROWSER firefox
-set -gx WALLPAPERS '/home/$USER/wallpapers'
+set -gx WALLPAPERS /home/$USER/wallpapers
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
@@ -106,7 +106,7 @@ function fgit
 	if [ -z $argv ]
 		echo "usage: fgit https://github.com/repo_owner/repo_name"
 	else
-		git clone --filter=blob:none --no-checkout --depth 1 --sparse $argv &> /dev/null 
+		git clone --filter=blob:none --no-checkout --depth 1 --sparse $argv &> /dev/null
 		cd $dirname
 		git sparse-checkout init --cone
 		read -P "get $dirname/" subdir
@@ -156,7 +156,7 @@ function v
 	else if [ -d "$argv" ]
 		echo Files Count: (count $argv/*); ls -sh $argv
 	else if string match -qr ".jpg|.png|.svg" $argv
-		rm -rf (sxiv -o $argv) && commandline -f repaint
+		test -f $argv && rm -rf (sxiv -o $argv) && commandline -f repaint #first check if image exists
 	else if string match -qr ".mp4|.mkv|.mp3|.opus|.webm|gif" $argv
 		mpv $argv
 	else if string match -qr "http|https" $argv
@@ -432,7 +432,7 @@ end
 function fish_user_key_bindings
 	bind ! bind_bang
 	bind '$' bind_dollar
-	bind '' 'sudo rfkill unblock all; sudo systemctl restart bluetooth && commandline -f repaint' 
+	bind '' 'sudo rfkill unblock all; sudo systemctl restart bluetooth && commandline -f repaint'
 	bind \cs 'echo Plz wait logging you in ! && ssh root@152.67.161.15 -i ~/.ssh/Oracle_cloud_key;' # "\cs" is same as ""
 	#bind '' 'e ~/.config/nixpkgs/configs/fish/config.fish && commandline -f repaint'
 	#bind '' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
