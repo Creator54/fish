@@ -157,25 +157,53 @@ function record
 end
 
 function v
-  if [ -z "$argv" ]
-    echo "Do pass a file to view !"
-  else if [ -d "$argv" ]
-    echo Files Count: (count $argv/*); ls -sh $argv
-  else if string match -qr ".jpg|.png|.svg" $argv
-    test -f $argv && rm -rf (sxiv -o $argv) && commandline -f repaint #first check if image exists
-  else if string match -qr ".mp4|.mkv|.mp3|.opus|.webm|gif" $argv
-    mpv $argv
-  else if string match -qr "http|https" $argv
-    get $argv
-  else if string match -q "*.pdf" $argv
-    zathura $argv &> /dev/null
-  else if string match -q "*.iso" $argv
-    echo "Copied PATH=$argv to clipboard"
-    echo $argv | clip
-  else if string match -qr ".md" $argv
-    glow $argv -p $PAGER
-  else
-    $PAGER $argv
+  switch $argv[1]
+    case '-*'
+      switch $argv[1]
+        case '-p'
+          $PAGER $argv
+        case '*'
+          echo "Usage: "
+          echo "v *.jpg/png/svg                   : opens in sxiv,mark to delete !"
+          echo "v *.mp4/mkv/mp3/opus/webm/gif     : opens in mpv"
+          echo "v *.pdf                           : opens in zathura"
+          echo "v *.iso                           : path copied to clipboard"
+          echo "v *.md                            : preview using glow and bat "
+          echo "v *.v                             : passes to the V lang Compiler "
+          echo "v repl                            : V lang repl "
+          echo "v dir/                            : Files Count + ls -sh dir/"
+          echo "v http/https://*                  : proceeds as get function"
+          echo "v -p                              : force bat preview"
+          echo "v -h                              : help"
+      end
+    case '*'
+      if [ -z "$argv" ]
+        echo read help : v -h
+      else if [ -d "$argv" ]
+        echo Files/Folders Count: (count $argv/*); ls -sh $argv
+      else if string match -qr ".jpg|.png|.svg" $argv
+        test -f $argv && rm -rf (sxiv -o $argv) && commandline -f repaint #first check if image exists
+      else if string match -qr "http|https" $argv
+        get $argv
+      else if string match -q "*.pdf" $argv
+        zathura $argv &> /dev/null
+      else if string match -q "*.iso" $argv
+        echo "Copied PATH=$argv to clipboard"
+        echo $argv | clip
+      else if string match -qr ".md" $argv[1]
+        glow $argv -p $PAGER 2>/dev/null #hide bat errors
+      else if string match -qr ".v|repl|.mp4|.mkv|.mp3|.opus|.webm|gif" $argv #since .v also checks out for .mkv so mixed here
+        if [ (echo $argv|cut -d'.' -f2) = 'v' ]
+          echo "Compiling !"
+        end
+        if string match -qr ".mp4|.mkv|.mp3|.opus|.webm|gif" $argv
+          mpv $argv
+        else
+          /home/$USER/vlang/v $argv
+        end
+      else
+        $PAGER $argv
+      end
   end
 end
 
@@ -190,9 +218,9 @@ function s
         case '-a'
           if string match -qr '^[0-9]+$' $argv[2] #usage: s -a 360 $query
             anime -q $argv[2] $argv[3]
-            else
-              anime $argv[2]
-            end
+          else
+            anime $argv[2]
+          end
         case '-v'
           mpv (fzf -q "$argv[2]") > /dev/null
         case '-l'
@@ -300,11 +328,11 @@ function battery
   else if string match -qr "time|left|time left" $argv
     acpi -i|head -n 1|cut -d' ' -f 5
   else if string match -qr "info" $argv
-    if [ (battery state) = "Discharging," ]
-      printf " %s\n" (battery %)
-      else
-        printf "ﮣ %s\n" (battery %)
-      end
+  if [ (battery state) = "Discharging," ]
+    printf " %s\n" (battery %)
+    else
+      printf "ﮣ %s\n" (battery %)
+    end
   else if [ $argv="h" ]
     line
     echo "battery options"
@@ -392,46 +420,46 @@ function c
   else if string match -qr '^[0-9]+$' $argv
     if [ $argv = "1" ] #browsing through /nix/store sometimes doesnt work so workaround for now
       cd ..
-      else
-        set dir_count (pwd | grep -o "/" | wc -l)
-        set go_back (math $dir_count - $argv + 2)
-        cd (pwd | awk -F (pwd | cut -d'/' -f$go_back) '{print $1}')
-      end
+    else
+      set dir_count (pwd | grep -o "/" | wc -l)
+      set go_back (math $dir_count - $argv + 2)
+      cd (pwd | awk -F (pwd | cut -d'/' -f$go_back) '{print $1}')
+    end
   else
     echo "Directory doesn't exit !"
     read -P "Press enter to create ! " ans #fish use P, bash uses p
     if [ "$ans" = "y" ] || [ "$ans" = "" ]
       mkdir -p $argv;
       cd $argv;
-      end
+    end
   end
 end
 
 function e
   switch $argv[1]
-    case '-d'
-      c $argv[2] && $EDITOR (echo $argv[2]|sed 's/^.*\///')
-    case '*'
-      $EDITOR $argv
+  case '-d'
+    c $argv[2] && $EDITOR (echo $argv[2]|sed 's/^.*\///')
+  case '*'
+    $EDITOR $argv
   end
 end
 
 function bind_dollar
   switch (commandline -t)[-1]
-    case "!"
-      commandline -t ""
-      commandline -f history-token-search-backward
-    case "*"
-      commandline -i '$'
+  case "!"
+    commandline -t ""
+    commandline -f history-token-search-backward
+  case "*"
+    commandline -i '$'
   end
 end
 
 function bind_bang
   switch (commandline -t)[-1]
-    case "!"
-      commandline -t $history[1]; commandline -f repaint
-    case "*"
-      commandline -i !
+  case "!"
+    commandline -t $history[1]; commandline -f repaint
+  case "*"
+    commandline -i !
   end
 end
 
