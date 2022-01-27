@@ -67,7 +67,7 @@ function yt
   if echo $argv[1] | grep '-' &> /dev/null
     switch $argv[1]
       case '-y'
-        ytfzf $argv[2] $argv[3]
+        ytfzf -t -s $argv[2] $argv[3]
       case '-d'
         echo 'yt-dlp -f 251+247 $argv[2]' > yt-resume
         yt-dlp -f 251+247 $argv[2] && rm -rf yt-resume #thus if this file exists shell knows download incomplete thus asks to complete
@@ -180,7 +180,11 @@ function v
       if [ -z "$argv" ]
         echo read help : v -h
       else if [ -d "$argv" ]
-        echo Files/Folders Count: (count $argv/*); ls -sh $argv
+        if string match -qr "photo|Photo|Scrennshot|screenshot|Gallery|gallery|DCIM|pics|Pics|Pictures|pictures|wall|Wall" $argv
+          rm -rf (sxiv -o -t $argv)
+        else
+          echo Files/Folders Count: (count $argv/*); ls -sh $argv
+        end
       else if string match -qr ".jpg|.png|.svg" $argv
         test -f $argv && rm -rf (sxiv -o $argv) && commandline -f repaint #first check if image exists
       else if string match -qr "http|https" $argv
@@ -192,7 +196,7 @@ function v
         echo $argv | clip
       else if string match -qr ".md" $argv[1]
         glow $argv -p $PAGER 2>/dev/null #hide bat errors
-      else if string match -qr ".v|repl|.mp4|.mkv|.mp3|.opus|.webm|gif" $argv #since .v also checks out for .mkv so mixed here
+      else if string match -qr ".v|repl|.mp4|.mkv|.mp3|.opus|.webm|.gif" $argv #has issues anyfile containing v falls here
         if [ (echo $argv|cut -d'.' -f2) = 'v' ]
           echo "Compiling !"
         end
@@ -496,6 +500,7 @@ alias gck 'git checkout'
 alias gx 'git reset --hard'
 alias gname 'git branch -M main'
 
+alias whereami "curl -s https://ipinfo.io/(curl -s https://ipinfo.io/ip)"
 alias apps "~/Apps-data/apps"
 alias dmenu "/home/$USER/dmenu/dmenu -y 8 -p ' Packages ' -nf '#7EC7A2' -sb '#262626'"
 alias dwmblocks "~/Apps-data/nixpkgs/wm/wm-configs/dwm/dwmblocks/dwmblocks"
