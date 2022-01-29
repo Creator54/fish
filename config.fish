@@ -470,8 +470,8 @@ end
 function fish_user_key_bindings
   bind ! bind_bang
   bind '$' bind_dollar
-  bind '' 'sudo rfkill unblock all; sudo systemctl restart bluetooth && commandline -f repaint'
-  bind \cs 'echo Plz wait logging you in ! && ssh root@152.67.161.15 -i ~/.ssh/Oracle_cloud_key;' # "\cs" is same as ""
+  bind '' 'e ~/Apps-data/nixpkgs/configs/fish/config.fish'
+  bind \cs 'echo Plz wait logging you in ! && ssh opc@152.67.163.227 -i ~/.ssh/webserver' # "\cs" is same as ""
   #bind '' 'e ~/.config/nixpkgs/configs/fish/config.fish && commandline -f repaint'
   #bind '' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
 end
@@ -515,7 +515,8 @@ alias stream "cvlc --fullscreen --aspect-ratio 16:9 --loop"
 alias size "gdu"
 alias keys "screenkey --no-systray -t 0.4"
 alias man batman
-alias fzf "fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+alias btid "bluetoothctl devices | cut -d ' '  -f2"
+alias fzfv "fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias headset "bluetoothctl connect 20:20:10:21:A4:8C"
 alias usage "baobab"
 alias ftp "ncftp"
@@ -530,6 +531,7 @@ alias copy "rsync --info=progress2 -auvz"
 alias fget "wget -r –level=0 -E –ignore-length -x -k -p -erobots=off -np -N"
 alias view_pic "kitty +kitten icat" #for viewing images in kitty
 alias torrent "io.webtorrent.WebTorrent"
+alias dwmkeys "cat ~/Apps-data/nixpkgs/wm/wm-configs/dwm/config.def.h | sed -e '/^[ \t]*\/\//d' -e '/^[ \t]*\/\*/d' -e '/static/d' -e '/TAGKEYS/d' -e 's/{//' -e 's/},//'| grep -e XK -e Button | fzf"
 
 #for stuff inside this dir
 set dir '~/.config/fish/scripts'
