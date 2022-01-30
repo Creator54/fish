@@ -7,6 +7,7 @@ set -gx WALLPAPERS /home/$USER/wallpapers
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
+set -gx SERVER 'creator54@150.230.143.106'
 
 function cmd
   echo CMD: $argv; echo
@@ -52,6 +53,26 @@ function line
     tput rmacs
   end
   printf "\n"
+end
+
+function push
+  if [ (count $argv) -eq 1 ]
+    #scp -i ~/.ssh/webserver -rp $argv[1] $SERVER:/home/creator54
+    rsync -e "ssh -i ~/.ssh/webserver" $argv[1] -aPvz $SERVER:/home/creator54
+  else
+    #scp -i ~/.ssh/webserver -rp $argv[1] $SERVER:/$argv[2] # -r for folders preserve times and modes of the original files and subdirectories
+    rsync -e "ssh -i ~/.ssh/webserver" $argv[1] -aPvz $SERVER:$argv[2]
+  end
+end
+
+function pull
+  if [ (count $argv) -eq 1 ]
+    rsync -e "ssh -i ~/.ssh/webserver" -chavzP $SERVER:/home/creator54/$argv[1] .
+    #scp -i ~/.ssh/webserver -rp $SERVER:/home/creator54/$argv[1] .
+  else
+    rsync -e "ssh -i ~/.ssh/webserver" -chavzP $SERVER:/home/creator54/$argv[1] $argv[2]
+    #scp -i ~/.ssh/webserver -rp $SERVER:/home/creator54/$argv[1] $argv[2]
+  end
 end
 
 # Add this to you config.fish or equivalent.
@@ -471,7 +492,6 @@ function fish_user_key_bindings
   bind ! bind_bang
   bind '$' bind_dollar
   bind '' 'e ~/Apps-data/nixpkgs/configs/fish/config.fish'
-  bind \cs 'echo Plz wait logging you in ! && ssh opc@152.67.163.227 -i ~/.ssh/webserver' # "\cs" is same as ""
   #bind '' 'e ~/.config/nixpkgs/configs/fish/config.fish && commandline -f repaint'
   #bind '' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
 end
@@ -500,6 +520,7 @@ alias gck 'git checkout'
 alias gx 'git reset --hard'
 alias gname 'git branch -M main'
 
+alias server "sftp -i ~/.ssh/webserver $SERVER"
 alias whereami "curl -s https://ipinfo.io/(curl -s https://ipinfo.io/ip)"
 alias apps "~/Apps-data/apps"
 alias dmenu "/home/$USER/dmenu/dmenu -y 8 -p ' Packages ' -nf '#7EC7A2' -sb '#262626'"
