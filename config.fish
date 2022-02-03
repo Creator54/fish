@@ -7,7 +7,7 @@ set -gx WALLPAPERS /home/$USER/wallpapers
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
-set -gx SERVER 'creator54@150.230.143.106'
+set -gx SERVER 'creator54@150.230.140.22'
 
 function cmd
   echo CMD: $argv; echo
@@ -192,7 +192,7 @@ function v
           echo "v *.md                            : preview using glow and bat "
           echo "v *.v                             : passes to the V lang Compiler "
           echo "v repl                            : V lang repl "
-          echo "v dir/                            : Files Count + ls -sh dir/"
+          echo "v dir/                            : cd dir/"
           echo "v http/https://*                  : proceeds as get function"
           echo "v -p                              : force bat preview"
           echo "v -h                              : help"
@@ -204,7 +204,7 @@ function v
         if string match -qr "photo|Photo|Scrennshot|screenshot|Gallery|gallery|DCIM|pics|Pics|Pictures|pictures|wall|Wall" $argv
           rm -rf (sxiv -o -t $argv)
         else
-          echo Files/Folders Count: (count $argv/*); ls -sh $argv
+          cd $argv
         end
       else if string match -qr ".jpg|.png|.svg" $argv
         test -f $argv && rm -rf (sxiv -o $argv) && commandline -f repaint #first check if image exists
@@ -528,7 +528,7 @@ alias dwmblocks "~/Apps-data/nixpkgs/wm/wm-configs/dwm/dwmblocks/dwmblocks"
 alias check 'cmd nix-shell -I nixpkgs=/home/$USER/nixpkgs -p'
 alias d "cd ~/dev"
 alias x "rm -rf $argv"
-alias l 'ls -sLShA'
+alias l 'v (ls | fzf )'
 alias fix-headphones 'alsactl restore' #https://github.com/NixOS/nixpkgs/issues/34460
 alias usb 'cd /run/media/$USER/'
 alias clip "xclip -sel clip"
@@ -540,6 +540,7 @@ alias btid "bluetoothctl devices | cut -d ' '  -f2"
 alias fzfv "fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 alias headset "bluetoothctl connect 20:20:10:21:A4:8C"
 alias usage "baobab"
+alias h "history | fzf | clip;echo copied to clipboard" #fish doesnt have process substitution yet
 alias ftp "ncftp"
 alias gallery "gthumb"
 alias calc "eva"
