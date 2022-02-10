@@ -3,7 +3,7 @@ function battery
   if string match -qr "state" $argv
     acpi -i|head -n 1|cut -d' ' -f 3
   else if string match -qr "percentage|%|charge" $argv
-    acpi -i|head -n 1|cut -d' ' -f 4
+    acpi -i|head -n 1|cut -d' ' -f 4 | cut -d',' -f1
   else if string match -qr "time|left|time left" $argv
     acpi -i|head -n 1|cut -d' ' -f 5
   else if string match -qr "info" $argv
