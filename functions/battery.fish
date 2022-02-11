@@ -1,36 +1,42 @@
 function battery
-  if string match -qr "state" $argv
-    acpi -i|head -n 1|cut -d' ' -f 3
-  else if string match -qr "percentage|%|charge" $argv
-    acpi -i|head -n 1|cut -d' ' -f 4 | cut -d',' -f1
-  else if string match -qr "time|left|time left|rem|remaining" $argv
-    set rem (acpi -i|head -n 1|cut -d' ' -f5)
-    if not [ -z $rem ]
-      if [ (echo $rem|cut -d':' -f1) -eq 0 ]
-        set rem (acpi -i|head -n 1|cut -d' ' -f5|cut -d':' -f2,3| sed 's/:/m:/;s/$/s/')
-        #set rem ($rem|cut -d':' -f2,3| sed 's/:/M:/2;s/$/S/')
+  switch $argv
+    case 'state'
+      acpi -i|head -n 1|cut -d' ' -f3 | cut -d',' -f1
+    case '%'
+      acpi -i|head -n 1|cut -d' ' -f4 | cut -d',' -f1
+    case 'rem'
+      set rem (acpi -i|head -n 1|cut -d' ' -f5)
+      if [ -z $rem ]
+        battery state
       else
-        set rem (acpi -i|head -n 1|cut -d' ' -f5|sed 's/:/h:/;s/:/m:/2;s/$/s/')
-        #set rem ($rem|sed 's/:/H:/;s/:/M:/2;s/$/S/')
+        if [ (echo $rem|cut -d':' -f1) -eq 0 ]
+          set rem (acpi -i|head -n 1|cut -d' ' -f5|cut -d':' -f2,3| sed 's/:/m:/;s/$/s/')
+          #set rem ($rem|cut -d':' -f2,3| sed 's/:/M:/2;s/$/S/')
+        else
+          set rem (acpi -i|head -n 1|cut -d' ' -f5|sed 's/:/h:/;s/:/m:/2;s/$/s/')
+          #set rem ($rem|sed 's/:/H:/;s/:/M:/2;s/$/S/')
+        end
+        if not string match -qr "Dischargings|Unknown" $rem #Discharging/Unknown case occurs for few seconds on connect/disconnect to power
+          printf "[%s]" (echo $rem|cut -d':' -f1,2)
+        end
       end
-      echo "REM: $rem"
-    end
-  else if string match -qr "info" $argv
-  if [ (battery state) = "Discharging," ]
-    printf " %s\n" (battery %)
-    else
-      printf "ﮣ %s\n" (battery %)
-    end
-  else if [ $argv="h" ]
-    line
-    echo "battery options"
-    line
-    echo "Options:"
-    echo "state:            charging/discharging"
-    echo "percentage/%/charge:  shows battery left"
-    echo "time/left/time left:  shows remaing time left to charge"
-    line
-  else
-    acpi -i
+    case 'fancy'
+      if [ (battery state) = "Discharging" ]
+        printf " %s %s\n" (battery %) (battery rem)
+      else if [ (battery state) = "Full" ]
+        printf "ﮣ %s Full\n" (battery %)
+      else
+        printf "ﮣ %s %s\n" (battery %) (battery rem)
+      end
+    case 'info'
+      acpi -i
+    case '*'
+      echo "Usage: "
+      echo
+      echo "%       :  battery left"
+      echo "rem     :  time left to charge/discharge"
+      echo "info    :  battery info verbose"
+      echo "fancy   :  fancy battery info"
+      echo "state   :  charging/discharging"
   end
 end
