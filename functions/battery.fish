@@ -6,17 +6,17 @@ function battery
       acpi -i|head -n 1|cut -d' ' -f4 | cut -d',' -f1
     case 'rem'
       set rem (acpi -i|head -n 1|cut -d' ' -f5)
-      if [ -z $rem ]
-        battery state
-      else
-        if [ (echo $rem|cut -d':' -f1) -eq 0 ]
-          set rem (acpi -i|head -n 1|cut -d' ' -f5|cut -d':' -f2,3| sed 's/:/m:/;s/$/s/')
+      set rem_check (acpi -i|head -n 1|cut -d' ' -f5|cut -d':' -f1)
+      if not [ -z $rem ] #only show if not empty
+        if [ $rem_check -eq 0 ]
+          set rem (echo $rem | cut -d':' -f2,3| sed 's/:/m:/;s/$/s/')
           #set rem ($rem|cut -d':' -f2,3| sed 's/:/M:/2;s/$/S/')
-        else
-          set rem (acpi -i|head -n 1|cut -d' ' -f5|sed 's/:/h:/;s/:/m:/2;s/$/s/')
+        else if string match -qr '^[0-9]+$' $rem_check #for rem_check !=0 && is not string
+          set rem (echo $rem | sed 's/:/h:/;s/:/m:/2;s/$/s/')
           #set rem ($rem|sed 's/:/H:/;s/:/M:/2;s/$/S/')
         end
-        if not string match -qr "Dischargings|Unknown" $rem #Discharging/Unknown case occurs for few seconds on connect/disconnect to power
+
+        if not string match -qr "discharging|Unknown" $rem #discharging/Unknown case occurs for few seconds on connect/disconnect to power
           printf "[%s]" (echo $rem|cut -d':' -f1,2)
         end
       end
