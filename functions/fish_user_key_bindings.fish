@@ -1,7 +1,6 @@
 function fish_user_key_bindings
   bind ! bind_bang
   bind '$' bind_dollar
-  bind \ck 'e ~/Apps-data/nixpkgs/configs/fish/config.fish'
-  #bind '' 'e ~/.config/nixpkgs/configs/fish/config.fish && commandline -f repaint'
-  #bind '' 'cd ~/.config/nixpkgs/configs/;commandline -f repaint'
+  bind \ck 'e ~/Apps-data/nixpkgs/configs/fish/config.fish;commandline -f repaint'
+  bind \cs 'c ~/Study;commandline -f repaint'
 end
