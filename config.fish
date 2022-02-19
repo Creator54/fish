@@ -2,7 +2,7 @@ set -gx TERM kitty
 set -gx TERMINAL $TERM
 set -gx EDITOR vim
 set -gx VISUAL vim
-set -gx BROWSER firefox
+set -gx BROWSER brave
 set -gx WALLPAPERS /home/$USER/wallpapers
 set -gx DOCUMENTS /home/$USER/Documents
 set -gx PAGER "bat"
@@ -10,6 +10,7 @@ set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 set -gx NIX 'creator54@150.230.140.22'
 set -gx UBUNTU 'ubuntu@150.230.142.49'
+fish_add_path -g $HOME/.config/rofi/bin
 
 alias r "nix-env --uninstall"
 alias q "nix-env -q"
@@ -21,7 +22,6 @@ alias h "history | fzf | clip;echo copied to clipboard" #fish doesnt have proces
 
 #some git alias
 alias gi 'git init;git branch -M main'
-alias gc 'git commit'
 alias gb 'git branch'
 alias gr 'git remote'
 alias gl 'git log'
@@ -35,6 +35,7 @@ alias gpull "git pull origin (gb | grep -e '*' | cut -d ' ' -f2)"
 alias size "gdu"
 alias calc "eva"
 alias man batman
+alias share serve
 alias ftp "ncftp"
 alias usage "baobab"
 alias poweshell "pash"
