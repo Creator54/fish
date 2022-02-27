@@ -71,5 +71,6 @@ alias doge "xmrig -o rx.unmineable.com:3333 -a rx -k -u DOGE:DHzDUHACdrc5j6SM6bS
 set dir '~/.config/fish/scripts'
 
 for i in (ls /home/$USER/.config/fish/scripts/)
-  alias $i "$dir/$i"
+  set script_name (echo $i |sed 's/.sh//')
+  alias $script_name "$dir/$i"
 end
