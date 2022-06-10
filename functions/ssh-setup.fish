@@ -1,7 +1,7 @@
 function ssh-setup
-  ssh-keygen -t ed25519 -C 'hi.$USER@gmail.com'
+  ssh-keygen -t rsa -b 4096 -C 'hi.creator54@gmail.com'
   eval (ssh-agent -c)
-  ssh-add ~/.ssh/id_ed25519
-  cat ~/.ssh/id_ed25519.pub | clip
+  ssh-add ~/.ssh/id_rsa
+  cat ~/.ssh/id_rsa.pub | clip
   echo "Copied SSH Key to Clipboard, now paste it on Github."
 end

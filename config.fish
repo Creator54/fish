@@ -10,6 +10,7 @@ set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!
 set -gx NNN_FIFO '/tmp/nnn.fifo'
 set -gx NIX 'creator54@150.230.140.22'
 set -gx UBUNTU 'ubuntu@150.230.142.49'
+set -gx server_key '~/.ssh/id_webserver'
 fish_add_path -g $HOME/.config/rofi/bin
 
 alias r "nix-env --uninstall"
