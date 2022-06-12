@@ -6,6 +6,6 @@ function i
     case -u -update --update update
       echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv[2]
     case '*'
-      echo "Channel: Creator54/nixpkgs" && nix-env -f /home/$USER/nixpkgs -iA $argv; or echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv; or echo "Channel: NIXOS" && nix-env -iA nixos.$argv
+      [ -d ~/nixpkgs ] && echo "Channel: Creator54/nixpkgs" && nix-env -f /home/$USER/nixpkgs -iA $argv; or echo "Channel: NIXPKGS" && nix-env -iA nixpkgs.$argv; or echo "Channel: NIXOS" && nix-env -iA nixos.$argv
     end
 end
