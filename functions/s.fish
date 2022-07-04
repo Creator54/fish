@@ -3,18 +3,18 @@ function s
   switch $argv[1]
     case '-*'
       switch $argv[1]
-        case '-y'
+        case '-yv'
           yt $argv[2]
-        case '-s'
-          play $argv[2]
+        case '-ya'
+          ytfzf -m $argv[2]
         case '-a'
           if string match -qr '^[0-9]+$' $argv[2] #usage: s -a 360 $query
-            anime -q $argv[2] $argv[3]
+            ani-cli -q $argv[2] $argv[3]
           else
-            anime $argv[2]
+            ani-cli $argv[2]
           end
-        case '-v'
-          mpv (fzf -q "$argv[2]") > /dev/null
+        case '-p'
+          mpv (bash -c 'find ~/ -type f | grep -E "\.mkv$|\.gif$|\.webm$|\.flv$|\.vob$|\.ogg$|\.ogv$|\.drc$|\.gifv$|\.mng$|\.avi$|\.mov$|\.qt$|\.wmv$|\.yuv$|\.rm$|\.rmvb$|/.asf$|\.amv$|\.mp4$|\.m4v$|\.mp*$|\.m?v$|\.svi$|\.3gp$|\.flv$|\.f4v$"' | fzf)
         case '-l'
           printf "From nix-locate:\n\n"
           nix-locate $argv[2]; or echo "Seems to be 1st time .." && echo "Running nix-index first !" && line && nix-index && nix-locate $argv[2]
@@ -38,21 +38,23 @@ function s
           end
         case '-h'
           printf "What this function can do ?\n\n"
-          echo "s query         : does nix-search, nix-locate if nix-search fails"
-          echo "s -v query      : does video search,plays via mpv"
-          echo "s -l query      : does nix-locate, find libs"
-          echo "s -a query      : does anime search"
-          echo "s -a 360/480/*** query  : does anime search with quality"
-          echo "s -s query      : does yt-audio search"
-          echo "s -y query      : does yt-video search"
-          echo "s -f query      : does a file search, opens as per function v and copies path to clipboard"
-          echo "s -w query      : does WEB search(ddg results)"
-          echo "s -w !g query       : does WEB search(google results)"
-          echo "s -w !domain        : does web search on domain specified(e.g !google hello: searches hello on google.com), opens on browser"
-          printf "s -h          : help menu\n\n"
+          echo "s query                 : does nix-search, nix-locate if nix-search fails"
+          echo "s -p query              : does local audio/video search,plays via mpv"
+          echo "s -l query              : does nix-locate, find libs"
+          echo "s -a query              : does ani-cli search"
+          echo "s -a 360/480/*** query  : does ani-cli search with quality"
+          echo "s -ya query             : does yt-audio search"
+          echo "s -yv query             : does yt-video search"
+          echo "s -f query              : does a file search, opens as per function v and copies path to clipboard"
+          echo "s -w query              : does WEB search(ddg results)"
+          echo "s -w !g query           : does WEB search(google results)"
+          echo "s -w !domain            : does web search on domain specified(e.g !google hello: searches hello on google.com), opens on browser"
+          echo "s -h                    : help menu"
         case '*'
-          printf "flag not found !\nCheckout 's -h' for all available options .\n"
+          s -h
       end
+    case ''
+      s -h
     case '*'
       printf "From nix search:\n\n" && nix search $argv; or line && printf "\nFrom nix-locate:\n\n" && nix-locate bin/$argv
   end
