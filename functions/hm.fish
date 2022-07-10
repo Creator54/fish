@@ -7,11 +7,12 @@ function hm
       set_color green
       echo "-h      :   help"
       echo "-a/i    :   add package"
-      echo "-x      :   remove package"
       echo "-g      :   list generations"
       echo "-q      :   list home.packages"
       echo "-c      :   current generation"
       echo "-s      :   home-manager switch"
+      echo "-x      :   remove pkg + hm -s "
+      echo "-z      :   remove pkg, cleans up config"
       echo "-r      :   -r <num>, goes back <num> generations"
     case '-s' '' #when -s of nothing is passed
       cmd home-manager switch
@@ -35,32 +36,38 @@ function hm
           set_color green
           echo "Cleaning up config ..."
           set_color normal
-          hm -x $argv[2]
+          hm -z $argv[2]
         end
       else
         set_color red
         echo "missing <package> attribute."
       end
-    case '-x'
+    case '-z' #for just cleaning the config
       if not [ "$argv[2]" = "" ]
         if grep $argv[2] $pkgs_file &> /dev/null
           set pkg_line (grep -n $argv[2] $pkgs_file | cut -d':' -f1)
-          echo "Removing $argv[2]"
+          echo "Removing $argv[2] ..."
           if [ (sed -n $pkg_line'p' $pkgs_file | wc -w) -ne 1 ]
             sed -i 's/ '"$argv[2]"'//' $pkgs_file
           else
             sed -i "/$argv[2]/d" $pkgs_file
           end
-          home-manager switch
-          set_color green
-          echo "Package: $argv[2] is now removed from your PATH"
         else
           set_color red
           echo "Package: $argv[2] not found in your $pkgs_file."
+          set status 1 2> /dev/null #fails to change the readonly var still gets the job done
         end
       else
         set_color red
         echo "missing <package> attribute."
+      end
+    case '-x' #for doing a rebuild after cleaning
+      if hm -z $argv[2]
+        home-manager switch
+        set_color green
+        echo "Package: $argv[2] is now removed from your PATH"
+      else
+        set status 1 2>/dev/null #just passing from hm -z
       end
     case '-q'
       set start "pkgs;"
