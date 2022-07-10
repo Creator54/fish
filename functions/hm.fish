@@ -1,5 +1,5 @@
 function hm
-  set pkgs_file "/home/creator54/.config/nixpkgs/pkgs/general.nix"
+  set pkgs_file "/home/$USER/.config/nixpkgs/pkgs/general.nix"
   switch $argv[1]
     case '-h'
       set_color blue
@@ -32,7 +32,7 @@ function hm
           echo "Package: $argv[2] is now available in your PATH"
         else
           set_color red
-          echo "Can't find package: $argv[2]"
+          echo "Failed to install package: $argv[2]"
           set_color green
           echo "Cleaning up config ..."
           set_color normal
