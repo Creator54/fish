@@ -13,7 +13,7 @@ set -gx FLEX 'creator54@129.154.34.20'
 set -gx ADGUARD 'creator54@152.70.69.197'
 set -gx server_key '~/.ssh/id_webserver'
 fish_add_path -g $HOME/.config/rofi/bin
-direnv hook fish | source 
+direnv hook fish | source
 
 alias r "nix-env --uninstall"
 alias q "nix-env -q"
@@ -35,6 +35,7 @@ alias gn 'git branch -M main'
 alias gck 'git checkout'
 alias gpull "git pull origin (gb | grep -e '*' | cut -d ' ' -f2)"
 
+alias hs hm
 alias size "gdu"
 alias calc "eva"
 alias man batman
