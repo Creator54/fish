@@ -3,8 +3,8 @@ set -gx TERMINAL $TERM
 set -gx EDITOR vim
 set -gx VISUAL vim
 set -gx BROWSER brave
-set -gx WALLPAPERS /home/$USER/wallpapers
-set -gx DOCUMENTS /home/$USER/Documents
+set -gx WALLPAPERS $HOME/wallpapers
+set -gx DOCUMENTS $HOME/Documents
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
@@ -12,7 +12,8 @@ set -gx NIX 'creator54@150.230.140.22'
 set -gx FLEX 'creator54@129.154.34.20'
 set -gx ADGUARD 'creator54@152.70.69.197'
 set -gx server_key '~/.ssh/id_webserver'
-fish_add_path -g $HOME/.config/rofi/bin
+fish_add_path -g $HOME/.node_modules/bin
+fish_add_path -g "$HOME/.config/rofi/bin"
 direnv hook fish | source
 
 alias r "nix-env --uninstall"
