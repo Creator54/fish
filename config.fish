@@ -2,7 +2,7 @@ set -gx TERM kitty
 set -gx TERMINAL $TERM
 set -gx EDITOR vim
 set -gx VISUAL vim
-set -gx BROWSER brave
+set -gx BROWSER firefox
 set -gx WALLPAPERS $HOME/wallpapers
 set -gx DOCUMENTS $HOME/Documents
 set -gx PAGER "bat"
