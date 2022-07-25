@@ -1,7 +1,6 @@
-
 function v
   switch $argv[1]
-    case '-*'
+    case '-*' ''
       switch $argv[1]
         case '-p'
           $PAGER $argv
@@ -14,16 +13,15 @@ function v
           echo "v *.md                            : preview using glow and bat "
           echo "v *.v                             : passes to the V lang Compiler "
           echo "v repl                            : V lang repl "
+          echo "v run *.v                         : run the v program "
           echo "v dir/                            : cd dir/"
           echo "v http/https://*                  : proceeds as get function"
           echo "v -p                              : force bat preview"
           echo "v -h                              : help"
       end
     case '*'
-      if [ -z "$argv" ]
-        echo read help : v -h
-      else if [ -d "$argv" ]
-        if string match -qr "photo|Photo|Scrennshot|screenshot|Gallery|gallery|DCIM|pics|Pics|Pictures|pictures|wall|Wall" $argv
+      if [ -d "$argv" ]
+        if string match -qr "photo|Photo|Screenshot|screenshot|Gallery|gallery|DCIM|pics|Pics|Pictures|pictures|wall|Wall" $argv
           rm -rf (sxiv -o -t $argv)
         else
           cd $argv
@@ -40,13 +38,10 @@ function v
       else if string match -qr ".md" $argv[1]
         glow $argv -p $PAGER 2>/dev/null #hide bat errors
       else if string match -qr ".v|repl|.mp4|.mkv|.mp3|.opus|.webm|.gif" $argv #has issues anyfile containing v falls here
-        if [ (echo $argv|cut -d'.' -f2) = 'v' ]
-          echo "Compiling !"
-        end
-        if string match -qr ".mp4|.mkv|.mp3|.opus|.webm|gif" $argv
+        if echo $argv | grep ".v\|run\|repl" >/dev/null
+          bash v $argv
+        else if string match -qr ".mp4|.mkv|.mp3|.opus|.webm|gif" $argv
           mpv $argv
-        else
-          /home/$USER/vlang/v $argv
         end
       else
         $PAGER $argv
