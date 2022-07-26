@@ -37,7 +37,7 @@ function v
         echo $argv | clip
       else if string match -qr ".md" $argv[1]
         glow $argv -p $PAGER 2>/dev/null #hide bat errors
-      else if string match -qr ".v|repl|run|install|.mp4|.mkv|.mp3|.opus|.webm|.gif" $argv #has issues anyfile containing v falls here
+      else if string match -qr ".v|repl|run|install|.mp4|.mkv|.mp3|.opus|.webm|.gif" $argv
         if echo $argv | grep ".v\|run\|repl\|install" >/dev/null;
           bash v $argv
         else if string match -qr ".mp4|.mkv|.mp3|.opus|.webm|gif" $argv
