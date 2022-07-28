@@ -1,6 +1,14 @@
 function fish_greeting
-  pgrep startx &> /dev/null
-  if test "$status" = "1"; and who -q | grep -e "users=1" &>/dev/null
-    startx &> /dev/null
+  set start_using "sx"
+  if not which sx &>/dev/null
+    set start_using "startx"
+  end
+
+  if not [ (pgrep sx &>/dev/null || pgrep startx &>/dev/null; echo $status) -eq 0 ]
+    if [ $start_using = "sx" ]
+      sx sh .xinitrc &> /dev/null
+    else
+      startx &> /dev/null
+    end
   end
 end
