@@ -12,6 +12,9 @@ set -gx NIX 'creator54@150.230.140.22'
 set -gx FLEX 'creator54@129.154.34.20'
 set -gx ADGUARD 'creator54@152.70.69.197'
 set -gx server_key '~/.ssh/id_webserver'
+fish_add_path -g $HOME/.node_modules/bin
+fish_add_path -g $HOME/.bun/bin
+fish_add_path -g $HOME/.config/rofi/bin
 direnv hook fish | source
 
 alias r "nix-env --uninstall"
