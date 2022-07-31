@@ -38,6 +38,7 @@ alias gck 'git checkout'
 alias gpull "git pull origin (gb | grep -e '*' | cut -d ' ' -f2)"
 
 alias hs hm
+alias files nautilus
 alias size "gdu"
 alias calc "eva"
 alias man batman
