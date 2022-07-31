@@ -70,7 +70,7 @@ function hm
         set status 1 2>/dev/null #just passing from hm -z
       end
     case '-q'
-      set start "pkgs;"
+      set start (cat $pkgs_file | grep -o 'packages .* \[' | cut -d" " -f4)
       set end "];"
       sed -n '/'"$start"'/,/'"$end"'/p' $pkgs_file | sed '1d;$d'
     case '-c'
