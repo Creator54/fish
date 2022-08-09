@@ -8,7 +8,7 @@ set -gx DOCUMENTS $HOME/Documents
 set -gx PAGER "bat"
 set -gx NNN_PLUG 'f:finder;o:fzopen;p:preview-tui;d:diffs;t:nmount;v:imgview;g:!git log;'
 set -gx NNN_FIFO '/tmp/nnn.fifo'
-set -gx NIX 'creator54@150.230.140.22'
+set -gx NIX 'creator54@129.154.36.185'
 set -gx FLEX 'creator54@129.154.34.20'
 set -gx ADGUARD 'creator54@152.70.69.197'
 set -gx server_key '~/.ssh/id_webserver'
