@@ -4,6 +4,8 @@ function v
       switch $argv[1]
         case '-p'
           $PAGER $argv
+        case '-r'
+          v (ls --time birth | head -n 1)
         case '*'
           echo "Usage: "
           echo "v *.jpg/png/svg                   : opens in sxiv,mark to delete !"
@@ -16,6 +18,7 @@ function v
           echo "v run *.v                         : run the v program "
           echo "v dir/                            : cd dir/"
           echo "v http/https://*                  : proceeds as get function"
+          echo "v -r                              : tries v on the most recent file on $PWD"
           echo "v -p                              : force bat preview"
           echo "v -h                              : help"
       end
