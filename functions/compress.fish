@@ -1,5 +1,5 @@
 function compress
-  if [ -z $argv ] 
+  if [ -z $argv ]
     echo "Usage: compress videofile !"
   else
     cp $argv /tmp
