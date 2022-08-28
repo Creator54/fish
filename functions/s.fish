@@ -56,6 +56,6 @@ function s
     case ''
       s -h
     case '*'
-      printf "From nix search:\n\n" && nix search $argv; or line && printf "\nFrom nix-locate:\n\n" && nix-locate bin/$argv
+      printf "From nix search:\n\n" && nix search $argv; or line && printf "\nFrom nix-locate:\n\n" && nix-locate bin/$argv && [ (nix-locate bin/$argv | wc -l) -gt 0 ]
   end
 end
