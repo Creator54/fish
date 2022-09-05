@@ -30,7 +30,7 @@ function v
           cd $argv
         end
       else if string match -qr ".jpg|.png|.svg" $argv
-        test -f $argv && rm -rf (sxiv -o $argv) && commandline -f repaint #first check if image exists
+        rm -rf (sxiv -o $argv) && commandline -f repaint #first check if image exists
       else if string match -qr "http|https" $argv
         get $argv
       else if string match -q "*.pdf" $argv
