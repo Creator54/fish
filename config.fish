@@ -17,6 +17,8 @@ fish_add_path -g $HOME/.bun/bin
 fish_add_path -g $HOME/.config/rofi/bin
 direnv hook fish | source
 
+alias recent 'v -r'
+
 alias r "nix-env --uninstall"
 alias q "nix-env -q"
 alias n "which nvidia-offload&> /dev/null && nvidia-offload; or nnn"
