@@ -2,7 +2,7 @@ layout tall
 cd /tmp/CP/
 
 # first kitty window
-launch --title "Source" vim code.cpp
+launch --title "Source" vim "+5 normal $" code.cpp
 
 # second kitty window
 launch --title "Input" vim  inputs
