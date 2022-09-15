@@ -1,0 +1,11 @@
+layout tall
+cd /tmp/CP/
+
+# first kitty window
+launch --title "Source" vim code.cpp
+
+# second kitty window
+launch --title "Input" vim  inputs
+
+# third kitty window
+launch --title "Output" bash -c "ls code.cpp inputs | entr sh -c 'clear;printf "Output:";echo;echo; g++ code.cpp -o temp;./temp<inputs>output;cat output;rm -rf temp'"
