@@ -3,6 +3,10 @@ function e
   case '-d'
     c $argv[2] && $EDITOR (echo $argv[2]|sed 's/^.*\///')
   case '*'
-    $EDITOR $argv
+    if string match (echo $argv | cut -d'.' -f2) cpp c cxx &> /dev/null
+      cdev $argv
+    else
+      $EDITOR $argv
+    end
   end
 end
