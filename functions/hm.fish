@@ -7,6 +7,7 @@ function hm
       set_color green
       echo "-h      :   help"
       echo "-a/i    :   add package"
+      echo "-e      :   edit home-manager config"
       echo "-g      :   list generations"
       echo "-q      :   list home.packages"
       echo "-c      :   current generation"
@@ -16,6 +17,8 @@ function hm
       echo "-r      :   -r <num>, goes back <num> generations"
     case '-s' '' #when -s of nothing is passed
       cmd home-manager switch
+    case '-e'
+      cmd he
     case '-a' '-i'
       set pkgs_start (math 1+(grep -n -F "home.packages" $pkgs_file | cut -d":" -f1))
 
