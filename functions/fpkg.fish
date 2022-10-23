@@ -7,7 +7,7 @@ function fpkg #search for related Package available via nixpkgs
   if [ $pkgcount -gt 0 ]
     echo
     read -P "Select a Package to install : " pkgid
-    if string match -qr '^-?[0-9]+(\.?[0-9]*)?$' -- $pkgid;and [ $pkgid -gt 0 ];and [ $pkgid -le $pkgcount ]
+    if not set -q $pkgid;or [ string match -qr '^-?[0-9]+(\.?[0-9]*)?$' -- $pkgid && [ $pkgid -gt 0 ] && [ $pkgid -le $pkgcount ] ]
       i $pkgs[$pkgid]
     else
       set_color red
