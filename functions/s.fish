@@ -1,4 +1,3 @@
-
 function s
   switch $argv[1]
     case '-*'
@@ -7,6 +6,12 @@ function s
           yt $argv[2]
         case '-ya'
           ytfzf -m $argv[2]
+        case '-s'
+          if [ $argv[3] != "" ] &>/dev/null
+            grep -rnw $argv[2] -e $argv[3]
+          else
+            grep -rnw './' -e $argv[2]
+          end
         case '-a'
           if string match -qr '^[0-9]+$' $argv[2] #usage: s -a 360 $query
             ani-cli -q $argv[2] $argv[3]
@@ -45,6 +50,8 @@ function s
           echo "s -a 360/480/*** query  : does ani-cli search with quality"
           echo "s -ya query             : does yt-audio search"
           echo "s -yv query             : does yt-video search"
+          echo "s -s query              : does files search for the passed string"
+          echo "s -s path query         : does files search for the passed string in requested path"
           echo "s -f query              : does a file search, opens as per function v and copies path to clipboard"
           echo "s -w query              : does WEB search(ddg results)"
           echo "s -w !g query           : does WEB search(google results)"
