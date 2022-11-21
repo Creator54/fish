@@ -15,7 +15,7 @@ function s
           end
           set run $run" | fzf | cut -d' ' -f1 | sed 's/:/ +/;s/://' "
           set checkFile (eval $run)
-          $EDITOR (echo $checkFile | cut -d' ' -f1) (echo $checkFile | cut -d ' ' -f2)
+          [ -f (echo $checkFile|cut -d' ' -f1) ] && $EDITOR (echo $checkFile | cut -d' ' -f1) (echo $checkFile | cut -d ' ' -f2)
         case '-a'
           if string match -qr '^[0-9]+$' $argv[2] #usage: s -a 360 $query
             ani-cli -q $argv[2] $argv[3]
