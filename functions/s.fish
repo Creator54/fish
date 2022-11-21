@@ -7,11 +7,15 @@ function s
         case '-ya'
           ytfzf -m $argv[2]
         case '-s'
+          set run ""
           if [ $argv[3] != "" ] &>/dev/null
-            grep -rnw $argv[2] -e $argv[3]
+            set run "grep -rnw $argv[2] -e $argv[3]"
           else
-            grep -rnw './' -e $argv[2]
+            set run "grep -rnw './' -e $argv[2]"
           end
+          set run $run" | fzf | cut -d' ' -f1 | sed 's/:/ +/;s/://' "
+          set checkFile (eval $run)
+          $EDITOR (echo $checkFile | cut -d' ' -f1) (echo $checkFile | cut -d ' ' -f2)
         case '-a'
           if string match -qr '^[0-9]+$' $argv[2] #usage: s -a 360 $query
             ani-cli -q $argv[2] $argv[3]
