@@ -7,6 +7,7 @@ function fish_greeting
   if not [ (pgrep sx &>/dev/null || pgrep startx &>/dev/null; echo $status) -eq 0 ]
     if [ $start_using = "sx" ]
       sx sh .xinitrc &> /dev/null
+      exit
     else
       startx &> /dev/null
     end
