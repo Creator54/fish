@@ -1,7 +1,5 @@
 set -gx TERM kitty
 set -gx TERMINAL $TERM
-set -gx EDITOR nvim
-set -gx VISUAL nvim
 set -gx BROWSER firefox
 set -gx WALLPAPERS $HOME/wallpapers
 set -gx DOCUMENTS $HOME/Documents
@@ -15,6 +13,14 @@ fish_add_path -g $HOME/.node_modules/bin
 fish_add_path -g $HOME/.bun/bin
 fish_add_path -g $HOME/.config/rofi/bin
 direnv hook fish | source
+
+if which vim &>/dev/null
+  set -gx EDITOR vim
+  set -gx VISUAL vim
+else
+  set -gx EDITOR nvim
+  set -gx VISUAL nvim
+end
 
 alias e $EDITOR
 alias vim nvim
