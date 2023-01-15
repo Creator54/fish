@@ -9,6 +9,8 @@ set -gx NNN_FIFO '/tmp/nnn.fifo'
 set -gx NIX 'creator54@129.154.36.185'
 set -gx FLEX 'creator54@144.24.140.204'
 set -gx server_key '~/.ssh/id_webserver'
+set -gx OPENAI_API_KEY (sed 's/\n//g' ~/api-chat)
+
 fish_add_path -g $HOME/.node_modules/bin
 fish_add_path -g $HOME/.bun/bin
 fish_add_path -g $HOME/.config/rofi/bin
